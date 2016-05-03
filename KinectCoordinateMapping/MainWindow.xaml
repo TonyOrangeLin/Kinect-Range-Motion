@@ -1,0 +1,113 @@
+﻿<Window x:Class="KinectCoordinateMapping.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="MainWindow" Height="602" Width="993"
+        Loaded="Window_Loaded" Closed="Window_Closed">
+    <Grid HorizontalAlignment="Center" Width="993" Margin="-4,0" Height="567" VerticalAlignment="Top">
+        <Grid  HorizontalAlignment="Center" Width="640" Height="360" VerticalAlignment="Top" Margin="170,43,183,0" >
+            <Image Name="camera" Width="640" Height="360" MouseLeftButtonUp="Image_MouseLeftButtonUp" MouseEnter="camera_MouseEnter" MouseLeave="camera_MouseLeave" MouseMove="camera_MouseMove" MouseRightButtonUp="camera_MouseRightButtonUp" MouseLeftButtonDown="camera_MouseLeftButtonDown" MouseWheel="camera_MouseWheel" HorizontalAlignment="Left" />
+            <Canvas Name="canvas" Height="360"  Width="640" MouseRightButtonUp="canvas_MouseRightButtonUp" MouseLeftButtonUp="canvas_MouseLeftButtonUp" MouseMove="canvas_MouseMove" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseWheel="canvas_MouseWheel" HorizontalAlignment="Left" />
+
+        </Grid>
+        <Grid x:Name="visionDetailGrid" HorizontalAlignment="Left" Height="72" VerticalAlignment="Top" Width="295" Margin="20,408,0,0">
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.3"/>
+            </Grid.Background>
+
+            <Slider x:Name="ballSizeSlider" HorizontalAlignment="Left" Margin="135,10,0,0" VerticalAlignment="Top" Width="150" ValueChanged="ballSizeSlider_ValueChanged" Maximum="50" Height="18"/>
+            <Label x:Name="label" Content="球大小" HorizontalAlignment="Left" Margin="84,7,0,0" VerticalAlignment="Top" Height="25" Width="46"/>
+            <Slider x:Name="lineSizeslider" HorizontalAlignment="Left" Margin="135,42,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.417,0.833" Width="150" ValueChanged="lineSizeslider_ValueChanged" Cursor="Arrow" Height="18"/>
+            <Label x:Name="label1" Content="線大小" HorizontalAlignment="Left" Margin="85,37,0,0" VerticalAlignment="Top" Height="25" Width="46"/>
+            <Button x:Name="ballDisplayButton" Content="以球表示" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="ballDisplayButton_Click" Background="White"/>
+            <Button x:Name="dotDisplayButton" Content="以點表示" HorizontalAlignment="Left" Margin="9,10,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="dotDisplayButton_Click" Background="White"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="342"  VerticalAlignment="Top" Width="120" Margin="10,43,0,0">
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.3"/>
+            </Grid.Background>
+            <Button x:Name="angleButton" Content="角度" HorizontalAlignment="Left" Margin="5,0,0,297" VerticalAlignment="Bottom" Width="105" Height="25" Click="angleButton_Click" Background="White"/>
+            <Button x:Name="lengthButton" Content="長度" HorizontalAlignment="Left" Margin="5,50,0,0" VerticalAlignment="Top" Width="105" Height="25" Click="lengthButton_Click" Background="White"/>
+            <Button x:Name="bisectionButton" Content="中垂腺" HorizontalAlignment="Left" Margin="5,85,0,0" VerticalAlignment="Top" Width="105" Height="25" Click="bisectionButton_Click" Background="White"/>
+            <Button x:Name="clearNowButton" Content="清除目前 " HorizontalAlignment="Left" Margin="5,115,0,0" VerticalAlignment="Top" Width="105" Height="25" Click="clearNowButton_Click" Background="White"/>
+            <Button Content="清除全部" Name="BtnStart" Width="105" Click="Btn_Start_Click" HorizontalAlignment="Left" Margin="5,145,0,175" Background="White" Height="25"  />
+            <Button x:Name="dragButton" Content="拖曳" HorizontalAlignment="Left" Margin="5,172,0,0" VerticalAlignment="Top" Width="105" Click="dragButton_Click" Background="White" Height="25"/>
+            <Button x:Name="zoomInButton" Content="放大" HorizontalAlignment="Left" Margin="5,202,0,0" VerticalAlignment="Top" Width="45" Height="25" Click="zoomInButton_Click" Background="White"/>
+            <Button x:Name="zoomOutButton" Content="縮小" HorizontalAlignment="Left" Margin="65,202,0,0" VerticalAlignment="Top" Width="45" Height="25" Click="zoomOutButton_Click" Background="White"/>
+            <CheckBox Content="ShowXYZ" Height="16" HorizontalAlignment="Left" Margin="15,271,0,0" x:Name="checkBoxShowXYZ" VerticalAlignment="Top" Width="83" />
+
+            <Button x:Name="undoButton" Content="上一步" HorizontalAlignment="Left" Margin="5,232,0,0" VerticalAlignment="Top" Width="105" Click="undoButton_Click" Height="25" Background="White"/>
+        </Grid>
+        <Grid x:Name="RecordGrid" HorizontalAlignment="Left" Height="75" Margin="20,485,0,0" VerticalAlignment="Top" Width="425">
+            <Frame x:Name="replayFramework" Source="ReplayPage.xaml" Margin="0,2,0,-2"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="72" Margin="320,408,0,0" VerticalAlignment="Top" Width="515">
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.3"/>
+            </Grid.Background>
+            <Button x:Name="saveResultButton" Content="快照" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="100" Click="saveResultButton_Click"/>
+            <Button x:Name="replayButton" Content="重播模式" HorizontalAlignment="Left" Margin="115,48,0,0" VerticalAlignment="Top" Width="100" Click="replayButton_Click"/>
+            <Button x:Name="savePNGButton" Content="存圖檔" HorizontalAlignment="Left" Margin="115,24,0,0" VerticalAlignment="Top" Width="100" Click="savePNGButton_Click"/>
+            <Button x:Name="saveDataButton" Content="存資料" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top" Width="100" Click="saveDataButton_Click"/>
+            <Button x:Name="resetSnapshotButton" Content="重置快照" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="100" Click="resetSnapshotButton_Click"/>
+            <Button x:Name="manualFusionButton" Content="手動融合" HorizontalAlignment="Left" Margin="115,0,0,0" VerticalAlignment="Top" Width="100" Click="manualFusionButton_Click"/>
+            <Button x:Name="startProcessButton" Content="開始流程" HorizontalAlignment="Left" Margin="325,0,0,0" VerticalAlignment="Top" Width="100" Click="startProcessButton_Click"/>
+            <Label x:Name="startProcessLabel" Content="" HorizontalAlignment="Left" Margin="220,24,0,0" VerticalAlignment="Top" Width="285" Height="38"/>
+            <Button x:Name="resetManualMarkButton" Content="重設拇指按鈕" HorizontalAlignment="Left" Margin="220,0,0,0" VerticalAlignment="Top" Width="100" Click="resetManualMarkButton_Click"/>
+        </Grid>
+        <DockPanel HorizontalAlignment="Left" Height="28" LastChildFill="False" Margin="20,10,0,0" VerticalAlignment="Top" Width="235">
+            <Menu x:Name="menu" HorizontalAlignment="Left" Height="20"  VerticalAlignment="Top" Width="190">
+                <MenuItem Header="檔案">
+                    <MenuItem Header="_New" />
+                    <MenuItem Header="開檔案" Click="LoadDataClick"/>
+                    <MenuItem Header="存檔案" Click="SaveDataClick"/>
+                    <MenuItem Header="存圖檔" Click="SaveImageClick"/>
+                    <Separator />
+                    <MenuItem Header="Exit" />
+                </MenuItem>
+                <MenuItem Header="工具欄">
+                    <MenuItem Header="_New" />
+                    <MenuItem Header="_Open" />
+                    <MenuItem Header="_Save" />
+                    <MenuItem Header="顯示" />
+                </MenuItem>
+                <MenuItem Header="顯示">
+                    <MenuItem Header="錄影模式" Click="recordDisplayClick" IsCheckable="true" IsChecked="True"/>
+                    <MenuItem Header="呈現模式" Click="detailDisplayClick" IsCheckable="true" IsChecked="True" />
+                    <MenuItem Header="截圖模式" Click="snapshotDisplayClick" IsCheckable="true" IsChecked="True"/>
+                    <MenuItem Header="畫線模式" Click="lineDisplayClick" IsCheckable="true" IsChecked="True"/>
+                </MenuItem>
+                <MenuItem Header="報表設定">
+                    <MenuItem Header="正面" Click="frontDocClick" IsCheckable="true" IsChecked="True"/>
+                    <MenuItem Header="背面" Click="backDocClick" IsCheckable="true" IsChecked="True" />
+                    <MenuItem Header="側面" Click="sideDocClick" IsCheckable="true" IsChecked="True"/>
+                    <Separator />
+                    <MenuItem Header="產生報表" Click="MakeDocClick"/>
+                </MenuItem>
+            </Menu>
+
+        </DockPanel>
+        <ListView x:Name="historyListView" HorizontalAlignment="Left" Height="514" Margin="840,43,0,0" VerticalAlignment="Top" Width="130" SelectionChanged="historyListView_SelectionChanged">
+            <ListView.View>
+                <GridView>
+                    <GridViewColumn/>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <Grid HorizontalAlignment="Left" Height="72" Margin="450,488,0,0" VerticalAlignment="Top" Width="385">
+            <Grid.Background>
+                <SolidColorBrush Color="Black" Opacity="0.3"/>
+            </Grid.Background>
+            <Button x:Name="setOneColorButton" Content="設定一號顏色" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="110" Click="setOneColorButton_Click" Background="#FF86CF2E"/>
+            <Button x:Name="setTwoColorButton" Content="設定二號顏色" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top" Width="110" Click="setTwoColorButton_Click" Background="#FFFFEB26"/>
+            <Label x:Name="setColorHintLabel" Content="" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="110"/>
+            <StatusBar HorizontalAlignment="Stretch" x:Name="statusBar" Background="White" Margin="145,24,20,14" Foreground="#FF423434" >
+                <StatusBarItem x:Name="kinectStatusBarItem" Content="" Height="34" />
+            </StatusBar>
+        </Grid>
+
+
+
+
+    </Grid>
+
+</Window>
