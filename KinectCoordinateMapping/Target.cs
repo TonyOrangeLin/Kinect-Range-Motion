@@ -64,7 +64,7 @@ namespace KinectCoordinateMapping
             TrackState = true;
         }
 
-        public void Cal(byte[] colorPixels, CameraSpacePoint[] ColorInSkel, float expectZ)
+        public void Cal(byte[] colorPixels, CameraSpacePoint[] ColorInSkel, int[] boolpixel)
         {
             int ColorCenterXsum = 0, ColorCenterYsum = 0, uuSum = 0, vvSum = 0, Cnt = 0;
 
@@ -84,15 +84,18 @@ namespace KinectCoordinateMapping
                     if (UU > AverageUU - uvRange && UU < AverageUU + uvRange
                      && VV > AverageVV - uvRange && VV < AverageVV + uvRange
                      && UU > CenterUU - CenterUVrange && UU < CenterUU + CenterUVrange
-                     && VV > CenterVV - CenterUVrange && VV < CenterVV + CenterUVrange)
+                     && VV > CenterVV - CenterUVrange && VV < CenterVV + CenterUVrange
+                     && (boolpixel[di] == 0 || boolpixel[di] == TargetID))
                      //&& depthZ > expectZ - 0.25f && depthZ < expectZ + 0.25f)
                     {
+                        boolpixel[di] = TargetID;
                         uuSum += (int)UU;
                         vvSum += (int)VV;
                         ColorCenterXsum += i;
                         ColorCenterYsum += j;
                         Cnt++;                  //顏色追蹤歸顏色追蹤，Z值追蹤歸Z值追蹤 ；即使zCnt值不夠，UV值、中心點仍繼續更新
                     }
+                    else boolpixel[di] = 0;
                 }
             }
 
@@ -105,20 +108,20 @@ namespace KinectCoordinateMapping
                 ColorCenter.X = ColorCenterXsum / Cnt;
                 ColorCenter.Y = ColorCenterYsum / Cnt;
                 
-                if( Math.Sqrt(Math.Pow((previousCenter.X - ColorCenter.X), 2) + Math.Pow((previousCenter.Y - ColorCenter.Y), 2)) < 4.5) //確認球中心是否飄移
-                {
-                    //要記錄點
-                    steadyCounter++;
-                    if (steadyCounter > 70)
-                    {
-                        steadyCounter = 0;
-                        isPing = true;
-                    }
-                }
-                else
-                {
-                    steadyCounter = 0;
-                }
+                //if( Math.Sqrt(Math.Pow((previousCenter.X - ColorCenter.X), 2) + Math.Pow((previousCenter.Y - ColorCenter.Y), 2)) < 4.5) //確認球中心是否飄移
+                //{
+                //    //要記錄點
+                //    steadyCounter++;
+                //    if (steadyCounter > 70)
+                //    {
+                //        steadyCounter = 0;
+                //        isPing = true;
+                //    }
+                //}
+                //else
+                //{
+                //    steadyCounter = 0;
+                //}
                 SearchRange = 80;
                 TrackState = true;
                 findPointCounter = 0;
@@ -140,7 +143,7 @@ namespace KinectCoordinateMapping
                 if (isEnableAllScreenScan)
                 {
                     //FindExpectColorPoint(colorPixels, 150, expectZ, ColorInSkel);
-                    FindExpectColorPointAllScreen(colorPixels);
+                    //FindExpectColorPointAllScreen(colorPixels);
                 }
             }
             

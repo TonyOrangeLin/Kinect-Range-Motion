@@ -317,7 +317,7 @@ namespace KinectCoordinateMapping
 
                
             }
-
+            this.boolPixels = new int[1920 * 1080];
             this.KinectStatusText = this._sensor.IsAvailable ? Properties.Resources.RunningStatusText
                                                             : Properties.Resources.NoSensorStatusText;
 
@@ -359,6 +359,12 @@ namespace KinectCoordinateMapping
             hintElementList.Add(new HintMalleolusAndMetatarsus());
 
             hintElementList.Add(new HintDone());
+            int NumbersOfTarget = 10;
+            for (int t = 0; t <= NumbersOfTarget; t++)
+            {
+                Target target2 = new Target(t);
+                TargetList.Add(target2);
+            }
         }
 
 
@@ -865,6 +871,7 @@ namespace KinectCoordinateMapping
 
                         //TrackColorBall();
 
+                        
                         if (zoomStruct.IsZoom)
                         {
                             originBitampSource = frame.ToBitmap(isReadToSnapShot);
@@ -1020,6 +1027,11 @@ namespace KinectCoordinateMapping
                         frame.CopyFrameDataToArray(bodyIndexs);
                     }
                 }
+
+                for (int i = 0; i < TargetList.Count; i++)
+                {
+                    TargetList[i].Cal(colorPixels, ColorInSkeleton, boolPixels);
+                }
             }
             else
             {
@@ -1080,7 +1092,7 @@ namespace KinectCoordinateMapping
         {
             //groupList.RemoveAt(index);
         }
-
+        private int[] boolPixels;
         private void DrawHistoryGroup()
         {
             if (!isSnapShot)
@@ -1088,6 +1100,10 @@ namespace KinectCoordinateMapping
                 for (int i = 0; i < groupList.Count; i++)
                 {
                     groupList[i].Draw(canvas, displayStruct, zoomStruct, checkBoxShowXYZ.IsChecked == true, floorVector);
+                }
+                for (int i = 0; i < TargetList.Count; i++)
+                {
+                    TargetList[i].Draw(canvas, displayStruct, zoomStruct, false);
                 }
             }            
             else
