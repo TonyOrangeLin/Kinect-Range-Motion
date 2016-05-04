@@ -22,7 +22,7 @@ namespace KinectCoordinateMapping
         public bool TrackState = false;
         double UU, VV, AverageUU, AverageVV, CenterUU, CenterVV;// KinectHeight = 0.88;  //x, y, z, this uv,average uv, center uv
 
-        int uvRange = 10, SearchRange = 10, CenterUVrange = 10;
+        int uvRange = 10, SearchRange = 80, CenterUVrange = 10;
 
         Point ColorCenter = new Point(0, 0);
         private List<double> xray = new List<double>() { };
@@ -119,14 +119,14 @@ namespace KinectCoordinateMapping
                 {
                     steadyCounter = 0;
                 }
-                SearchRange = 30;
+                SearchRange = 80;
                 TrackState = true;
                 findPointCounter = 0;
             }
             else
             {
                 TrackState = false;
-                SearchRange = 60;
+                SearchRange = 160;
                 findPointCounter++;
                 if (findPointCounter > 4)
                 {
@@ -139,7 +139,8 @@ namespace KinectCoordinateMapping
                 }
                 if (isEnableAllScreenScan)
                 {
-                    FindExpectColorPoint(colorPixels, 150, expectZ, ColorInSkel);
+                    //FindExpectColorPoint(colorPixels, 150, expectZ, ColorInSkel);
+                    FindExpectColorPointAllScreen(colorPixels);
                 }
             }
             
@@ -231,8 +232,8 @@ namespace KinectCoordinateMapping
                             UU = -0.169 * colorP[ci + 2] - 0.331 * colorP[ci + 1] + 0.5 * colorP[ci] + 128;
                             VV = 0.5 * colorP[ci + 2] - 0.419 * colorP[ci + 1] - 0.081 * colorP[ci] + 128;
                             if (UU > AverageUU - uvRange && UU < AverageUU + uvRange
-                                && VV > AverageVV - uvRange && VV < AverageVV + uvRange
-                             && depthZ > expectZ - 0.15f && depthZ < expectZ + 0.15f)
+                                && VV > AverageVV - uvRange && VV < AverageVV + uvRange)
+                            // && depthZ > expectZ - 0.15f && depthZ < expectZ + 0.15f)
                             {
                                 uuSum += (int)UU;
                                 vvSum += (int)VV;

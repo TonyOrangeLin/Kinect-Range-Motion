@@ -42,7 +42,7 @@ namespace KinectCoordinateMapping
     {
         private KinectSensor _sensor;
         private MultiSourceFrameReader _reader;
-        //private List<Target> TargetList;// = new List<Target>();
+        private List<Target> TargetList = new List<Target>();
         public CameraSpacePoint[] ColorInSkeleton;
         //private const double NumbersOfTarget = 4;
         //private const double AnticipatedUU = 60;
@@ -80,7 +80,7 @@ namespace KinectCoordinateMapping
         int zoomOffsetX = 0;
         int zoomOffestY = 0;
         bool isDotDisplay = true;
-        CommandInterface modeCommnad;
+        //CommandInterface modeCommnad;
         protected int startX;
         protected int startY;
         protected int middleX;
@@ -143,7 +143,7 @@ namespace KinectCoordinateMapping
         /// <summary>
         /// 提示的類別，目前有tts、人體模型與顏色提示
         /// </summary>
-        private HintProcess hintProcess = new HintProcess(true, true);
+        //private HintProcess hintProcess = new HintProcess(true, true);
         /// <summary>
         /// 避免色球追蹤Ping後 會太快再Ping下一次，所以要冷卻時間，配合Timer
         /// </summary>
@@ -210,6 +210,13 @@ namespace KinectCoordinateMapping
         Body patientBody;
         int hintCoolDown = 0;
         int readyCoolDown = 0;
+        private const double AnticipatedUU = 60;
+        private const double AnticipatedVV = 140;
+        int cntemp;
+        int CatchSuccess = 0;
+        Body patientFrontBody;
+        bool takePatienBodyDataFlag = false;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -231,7 +238,7 @@ namespace KinectCoordinateMapping
                 if (hintCoolDown <= 0)
                 {
                     hintCoolDown = 0;
-                    ProcessHandler();
+                    //ProcessHandler();
                     hintCoolDown = 10;
                     //10秒提醒一次
                 }
@@ -248,27 +255,26 @@ namespace KinectCoordinateMapping
 
         private void ReadyCoolDownSnapshot(int count)
         {
-            if (progressSeq.NowStep == Step.FrontReady  || progressSeq.NowStep == Step.BackReady || progressSeq.NowStep == Step.SideReady)
-            {
-                startProcessButton.Content = count.ToString();
-                if (count <= 3)
-                {
-                    hintProcess.TTSHint(count.ToString());
-                }
-                if (count <= 0)
-                {
-                    TakeSnapShot();
-                    count = 0;
-                    takePatienBodyDataFlag = true;
-                    progressSeq.Start();
-                    ProcessHandler();
+            //if (progressSeq.NowStep == Step.FrontReady  || progressSeq.NowStep == Step.BackReady || progressSeq.NowStep == Step.SideReady)
+            //{
+            //    startProcessButton.Content = count.ToString();
+            //    if (count <= 3)
+            //    {
+            //        hintProcess.TTSHint(count.ToString());
+            //    }
+            //    if (count <= 0)
+            //    {
+            //        TakeSnapShot();
+            //        count = 0;
+            //        takePatienBodyDataFlag = true;
+            //        progressSeq.Start();
+            //        ProcessHandler();
 
 
-                }
-            }
+            //    }
+            //}
         }
-        Body patientFrontBody;
-        bool takePatienBodyDataFlag = false;
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             _sensor = KinectSensor.GetDefault();
@@ -276,7 +282,7 @@ namespace KinectCoordinateMapping
             groupList = new List<Group>();
             zoomStruct = new ZoomStruct();
             displayStruct = new DisplayStruct();
-            modeCommnad = new ZoomInCommand(this);
+            //modeCommnad = new ZoomInCommand(this);
 
 
 
@@ -493,394 +499,394 @@ namespace KinectCoordinateMapping
             }
         }
 
-        private void HumanBodyHintWarning()
-        {
-            SolidColorBrush greenBrush = new SolidColorBrush(Color.FromRgb(90, 255, 105));
-            SolidColorBrush redBrush = new SolidColorBrush(Color.FromRgb(255, 0, 0));
-            SolidColorBrush yellowBrush = new SolidColorBrush(Color.FromRgb(255, 255, 90));
+        //private void HumanBodyHintWarning()
+        //{
+        //    SolidColorBrush greenBrush = new SolidColorBrush(Color.FromRgb(90, 255, 105));
+        //    SolidColorBrush redBrush = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+        //    SolidColorBrush yellowBrush = new SolidColorBrush(Color.FromRgb(255, 255, 90));
 
-            if (progressSeq.NowStep > Step.FrontReady && progressSeq.NowStep < Step.BackReady)
-            {
-                if (progressSeq.NowStep == Step.FrontHead)
-                {
-                    hintProcess.humanBodyWindow.button2_front.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button3_front.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.FrontShoulder)
-                {
-                    hintProcess.humanBodyWindow.button5_front.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button6_front.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.Iliac)
-                {
-                    hintProcess.humanBodyWindow.button12_front.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button13_front.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.Trochanter)
-                {
-                    hintProcess.humanBodyWindow.button14_front.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button15_front.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.Tuberosity)
-                {
-                    hintProcess.humanBodyWindow.button18_front.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button21_front.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.Patella)
-                {
-                    hintProcess.humanBodyWindow.button17_front.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button20_front.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.KneeJointLine)
-                {
-                    hintProcess.humanBodyWindow.button16_front.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button19_front.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.LateralmMlleoli)
-                {
-                    hintProcess.humanBodyWindow.button22_front.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button25_front.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.MedialMalleoli)
-                {
-                    hintProcess.humanBodyWindow.button23_front.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button26_front.Background = yellowBrush;
-                }
-            }
-            else if (progressSeq.NowStep > Step.BackReady && progressSeq.NowStep < Step.SideReady)
-            {
-                if (progressSeq.NowStep == Step.ScapulaUp)
-                {
-                    hintProcess.humanBodyWindow.button17_back.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.Scapula)
-                {
-                    hintProcess.humanBodyWindow.button8_back.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button7_back.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.MidpointLeg)
-                {
-                    hintProcess.humanBodyWindow.button32_back.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button33_back.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.IntermalleolarLine)
-                {
-                    hintProcess.humanBodyWindow.button35_back.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button39_back.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.Tendon)
-                {
-                    hintProcess.humanBodyWindow.button41_back.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button37_back.Background = yellowBrush;
-                }
-            }
-            else if (progressSeq.NowStep > Step.SideReady && progressSeq.NowStep < Step.Done)
-            {
-                if (progressSeq.NowStep == Step.TragusAndSeventhCervicalVertebra)
-                {
-                    hintProcess.humanBodyWindow.button2_side.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button8_side.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.AcromionAndElbow)
-                {
-                    hintProcess.humanBodyWindow.button5_side.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.AnteriorSuperiorIliacSpineAndPosteriorSuperiorIliacSpine)
-                {
-                    hintProcess.humanBodyWindow.button21_side.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button22_side.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.TrochanterAndKneeJoint)
-                {
-                    hintProcess.humanBodyWindow.button23_side.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button24_side.Background = yellowBrush;
-                }
-                if (progressSeq.NowStep == Step.MalleolusAndMetatarsus)
-                {
-                    hintProcess.humanBodyWindow.button30_side.Background = yellowBrush;
-                    hintProcess.humanBodyWindow.button31_side.Background = yellowBrush;
-                }
-            }
+        //    if (progressSeq.NowStep > Step.FrontReady && progressSeq.NowStep < Step.BackReady)
+        //    {
+        //        if (progressSeq.NowStep == Step.FrontHead)
+        //        {
+        //            hintProcess.humanBodyWindow.button2_front.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button3_front.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.FrontShoulder)
+        //        {
+        //            hintProcess.humanBodyWindow.button5_front.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button6_front.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.Iliac)
+        //        {
+        //            hintProcess.humanBodyWindow.button12_front.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button13_front.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.Trochanter)
+        //        {
+        //            hintProcess.humanBodyWindow.button14_front.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button15_front.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.Tuberosity)
+        //        {
+        //            hintProcess.humanBodyWindow.button18_front.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button21_front.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.Patella)
+        //        {
+        //            hintProcess.humanBodyWindow.button17_front.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button20_front.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.KneeJointLine)
+        //        {
+        //            hintProcess.humanBodyWindow.button16_front.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button19_front.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.LateralmMlleoli)
+        //        {
+        //            hintProcess.humanBodyWindow.button22_front.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button25_front.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.MedialMalleoli)
+        //        {
+        //            hintProcess.humanBodyWindow.button23_front.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button26_front.Background = yellowBrush;
+        //        }
+        //    }
+        //    else if (progressSeq.NowStep > Step.BackReady && progressSeq.NowStep < Step.SideReady)
+        //    {
+        //        if (progressSeq.NowStep == Step.ScapulaUp)
+        //        {
+        //            hintProcess.humanBodyWindow.button17_back.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.Scapula)
+        //        {
+        //            hintProcess.humanBodyWindow.button8_back.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button7_back.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.MidpointLeg)
+        //        {
+        //            hintProcess.humanBodyWindow.button32_back.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button33_back.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.IntermalleolarLine)
+        //        {
+        //            hintProcess.humanBodyWindow.button35_back.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button39_back.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.Tendon)
+        //        {
+        //            hintProcess.humanBodyWindow.button41_back.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button37_back.Background = yellowBrush;
+        //        }
+        //    }
+        //    else if (progressSeq.NowStep > Step.SideReady && progressSeq.NowStep < Step.Done)
+        //    {
+        //        if (progressSeq.NowStep == Step.TragusAndSeventhCervicalVertebra)
+        //        {
+        //            hintProcess.humanBodyWindow.button2_side.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button8_side.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.AcromionAndElbow)
+        //        {
+        //            hintProcess.humanBodyWindow.button5_side.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.AnteriorSuperiorIliacSpineAndPosteriorSuperiorIliacSpine)
+        //        {
+        //            hintProcess.humanBodyWindow.button21_side.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button22_side.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.TrochanterAndKneeJoint)
+        //        {
+        //            hintProcess.humanBodyWindow.button23_side.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button24_side.Background = yellowBrush;
+        //        }
+        //        if (progressSeq.NowStep == Step.MalleolusAndMetatarsus)
+        //        {
+        //            hintProcess.humanBodyWindow.button30_side.Background = yellowBrush;
+        //            hintProcess.humanBodyWindow.button31_side.Background = yellowBrush;
+        //        }
+        //    }
 
-        }
-        private void HumanBodyHint(List<Target> list)
-        {
-            SolidColorBrush greenBrush = new SolidColorBrush(Color.FromRgb(90, 255, 105));
-            SolidColorBrush redBrush = new SolidColorBrush(Color.FromRgb(255, 0, 0));
-            SolidColorBrush yellowBrush = new SolidColorBrush(Color.FromRgb(255, 255, 90));
-            for (int i = 0; i < list.Count; i++)
-            {
-                if (progressSeq.NowStep > Step.FrontReady && progressSeq.NowStep < Step.BackReady)
-                {
-                    if (list[i].TargetID == 2)
-                    {
-                        hintProcess.humanBodyWindow.button2_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 3)
-                    {
-                        hintProcess.humanBodyWindow.button3_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 5)
-                    {
-                        hintProcess.humanBodyWindow.button5_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 6)
-                    {
-                        hintProcess.humanBodyWindow.button6_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 12)
-                    {
-                        hintProcess.humanBodyWindow.button12_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 13)
-                    {
-                        hintProcess.humanBodyWindow.button13_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 14)
-                    {
-                        hintProcess.humanBodyWindow.button14_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 15)
-                    {
-                        hintProcess.humanBodyWindow.button15_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 17)
-                    {
-                        hintProcess.humanBodyWindow.button17_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 20)
-                    {
-                        hintProcess.humanBodyWindow.button20_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 16)
-                    {
-                        hintProcess.humanBodyWindow.button16_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 19)
-                    {
-                        hintProcess.humanBodyWindow.button19_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 18)
-                    {
-                        hintProcess.humanBodyWindow.button18_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 21)
-                    {
-                        hintProcess.humanBodyWindow.button21_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 23)
-                    {
-                        hintProcess.humanBodyWindow.button23_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 26)
-                    {
-                        hintProcess.humanBodyWindow.button26_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 22)
-                    {
-                        hintProcess.humanBodyWindow.button22_front.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 25)
-                    {
-                        hintProcess.humanBodyWindow.button25_front.Background = greenBrush;
-                    }
-                }
-                else if (progressSeq.NowStep > Step.BackReady && progressSeq.NowStep < Step.SideReady)
-                {
-                    if (list[i].TargetID == 8)
-                    {
-                        hintProcess.humanBodyWindow.button8_back.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 7)
-                    {
-                        hintProcess.humanBodyWindow.button7_back.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 17)
-                    {
-                        hintProcess.humanBodyWindow.button17_back.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 32)
-                    {
-                        hintProcess.humanBodyWindow.button32_back.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 33)
-                    {
-                        hintProcess.humanBodyWindow.button33_back.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 35)
-                    {
-                        hintProcess.humanBodyWindow.button35_back.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 39)
-                    {
-                        hintProcess.humanBodyWindow.button39_back.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 41)
-                    {
-                        hintProcess.humanBodyWindow.button41_back.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 37)
-                    {
-                        hintProcess.humanBodyWindow.button37_back.Background = greenBrush;
-                    }
-                }
-                else if (progressSeq.NowStep > Step.SideReady && progressSeq.NowStep < Step.Done)
-                {
-                    if (list[i].TargetID == 2)
-                    {
-                        hintProcess.humanBodyWindow.button2_side.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 5)
-                    {
-                        hintProcess.humanBodyWindow.button5_side.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 8)
-                    {
-                        hintProcess.humanBodyWindow.button8_side.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 21)
-                    {
-                        hintProcess.humanBodyWindow.button21_side.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 22)
-                    {
-                        hintProcess.humanBodyWindow.button22_side.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 23)
-                    {
-                        hintProcess.humanBodyWindow.button23_side.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 24)
-                    {
-                        hintProcess.humanBodyWindow.button24_side.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 30)
-                    {
-                        hintProcess.humanBodyWindow.button30_side.Background = greenBrush;
-                    }
-                    if (list[i].TargetID == 31)
-                    {
-                        hintProcess.humanBodyWindow.button31_side.Background = greenBrush;
-                    }
-                }
-            }
-        }
+        //}
+        //private void HumanBodyHint(List<Target> list)
+        //{
+        //    SolidColorBrush greenBrush = new SolidColorBrush(Color.FromRgb(90, 255, 105));
+        //    SolidColorBrush redBrush = new SolidColorBrush(Color.FromRgb(255, 0, 0));
+        //    SolidColorBrush yellowBrush = new SolidColorBrush(Color.FromRgb(255, 255, 90));
+        //    for (int i = 0; i < list.Count; i++)
+        //    {
+        //        if (progressSeq.NowStep > Step.FrontReady && progressSeq.NowStep < Step.BackReady)
+        //        {
+        //            if (list[i].TargetID == 2)
+        //            {
+        //                hintProcess.humanBodyWindow.button2_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 3)
+        //            {
+        //                hintProcess.humanBodyWindow.button3_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 5)
+        //            {
+        //                hintProcess.humanBodyWindow.button5_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 6)
+        //            {
+        //                hintProcess.humanBodyWindow.button6_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 12)
+        //            {
+        //                hintProcess.humanBodyWindow.button12_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 13)
+        //            {
+        //                hintProcess.humanBodyWindow.button13_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 14)
+        //            {
+        //                hintProcess.humanBodyWindow.button14_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 15)
+        //            {
+        //                hintProcess.humanBodyWindow.button15_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 17)
+        //            {
+        //                hintProcess.humanBodyWindow.button17_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 20)
+        //            {
+        //                hintProcess.humanBodyWindow.button20_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 16)
+        //            {
+        //                hintProcess.humanBodyWindow.button16_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 19)
+        //            {
+        //                hintProcess.humanBodyWindow.button19_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 18)
+        //            {
+        //                hintProcess.humanBodyWindow.button18_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 21)
+        //            {
+        //                hintProcess.humanBodyWindow.button21_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 23)
+        //            {
+        //                hintProcess.humanBodyWindow.button23_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 26)
+        //            {
+        //                hintProcess.humanBodyWindow.button26_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 22)
+        //            {
+        //                hintProcess.humanBodyWindow.button22_front.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 25)
+        //            {
+        //                hintProcess.humanBodyWindow.button25_front.Background = greenBrush;
+        //            }
+        //        }
+        //        else if (progressSeq.NowStep > Step.BackReady && progressSeq.NowStep < Step.SideReady)
+        //        {
+        //            if (list[i].TargetID == 8)
+        //            {
+        //                hintProcess.humanBodyWindow.button8_back.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 7)
+        //            {
+        //                hintProcess.humanBodyWindow.button7_back.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 17)
+        //            {
+        //                hintProcess.humanBodyWindow.button17_back.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 32)
+        //            {
+        //                hintProcess.humanBodyWindow.button32_back.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 33)
+        //            {
+        //                hintProcess.humanBodyWindow.button33_back.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 35)
+        //            {
+        //                hintProcess.humanBodyWindow.button35_back.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 39)
+        //            {
+        //                hintProcess.humanBodyWindow.button39_back.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 41)
+        //            {
+        //                hintProcess.humanBodyWindow.button41_back.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 37)
+        //            {
+        //                hintProcess.humanBodyWindow.button37_back.Background = greenBrush;
+        //            }
+        //        }
+        //        else if (progressSeq.NowStep > Step.SideReady && progressSeq.NowStep < Step.Done)
+        //        {
+        //            if (list[i].TargetID == 2)
+        //            {
+        //                hintProcess.humanBodyWindow.button2_side.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 5)
+        //            {
+        //                hintProcess.humanBodyWindow.button5_side.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 8)
+        //            {
+        //                hintProcess.humanBodyWindow.button8_side.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 21)
+        //            {
+        //                hintProcess.humanBodyWindow.button21_side.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 22)
+        //            {
+        //                hintProcess.humanBodyWindow.button22_side.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 23)
+        //            {
+        //                hintProcess.humanBodyWindow.button23_side.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 24)
+        //            {
+        //                hintProcess.humanBodyWindow.button24_side.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 30)
+        //            {
+        //                hintProcess.humanBodyWindow.button30_side.Background = greenBrush;
+        //            }
+        //            if (list[i].TargetID == 31)
+        //            {
+        //                hintProcess.humanBodyWindow.button31_side.Background = greenBrush;
+        //            }
+        //        }
+        //    }
+        //}
 
-        private void TrackColorBall()
-        {
-            if (snapShotCoolDown <= 0)
-            {
-                bool isDuplicate = false;
-                if (progressSeq.NowStep == Step.FrontReady || progressSeq.NowStep == Step.BackReady || progressSeq.NowStep == Step.None || progressSeq.NowStep == Step.Done || progressSeq.NowStep == Step.SideReady)
-                {
+        //private void TrackColorBall()
+        //{
+        //    if (snapShotCoolDown <= 0)
+        //    {
+        //        bool isDuplicate = false;
+        //        if (progressSeq.NowStep == Step.FrontReady || progressSeq.NowStep == Step.BackReady || progressSeq.NowStep == Step.None || progressSeq.NowStep == Step.Done || progressSeq.NowStep == Step.SideReady)
+        //        {
 
-                }
-                else
-                {
-                    for (int i = 0; i < manualMarkList.Count; i++)
-                    {
-                        if (isTrackBody || true)
-                        {
-                            manualMarkList[i].Cal(colorPixels, ColorInSkeleton, humanZdepth);
-                            if (manualMarkList[i].isPing)
-                            {
-                                manualMarkList[i].isPing = false;
-                                if (manualPingList.Count == 0)
-                                {
-                                    Target target = new Target(manualMarkList[i].TargetID);
-                                    target.Setting((int)manualMarkList[i].point2D().X, (int)manualMarkList[i].point2D().Y);
-                                    target.setPoint3D(manualMarkList[i].point3D());
-                                    manualPingList.Add(target);
-                                }
-                                else
-                                {
-                                    for (int j = 0; j < manualPingList.Count; j++)
-                                    {
-                                        if (CompareTwoPoint(manualPingList[j].point2D(), manualMarkList[i].point2D()))
-                                        {
-                                            //同一點不記錄
-                                            isDuplicate = true;
-                                            break;
-                                        }
-                                    }
-                                    if (!isDuplicate)
-                                    {
-                                        if (manualPingList[0].TargetID == manualMarkList[i].TargetID)
-                                        {
-                                            //避免兩個點在同一個地方
-                                        }
-                                        else
-                                        {
-                                            Target target = new Target(manualMarkList[i].TargetID);
-                                            target.Setting((int)manualMarkList[i].point2D().X, (int)manualMarkList[i].point2D().Y);
-                                            target.setPoint3D(manualMarkList[i].point3D());
-                                            manualPingList.Add(target);
-                                            int count1 = 0;
-                                            int count2 = 0;
-                                            for (int k = 0; k < manualPingList.Count; k++)
-                                            {
-                                                if (manualPingList[k].TargetID == 0)
-                                                {
-                                                    count1++;
-                                                }
-                                                if (manualPingList[k].TargetID == 1)
-                                                {
-                                                    count2++;
-                                                }
-                                            }
-                                            if (count1 == count2)
-                                            {
+        //        }
+        //        else
+        //        {
+        //            for (int i = 0; i < manualMarkList.Count; i++)
+        //            {
+        //                if (isTrackBody || true)
+        //                {
+        //                    manualMarkList[i].Cal(colorPixels, ColorInSkeleton, humanZdepth);
+        //                    if (manualMarkList[i].isPing)
+        //                    {
+        //                        manualMarkList[i].isPing = false;
+        //                        if (manualPingList.Count == 0)
+        //                        {
+        //                            Target target = new Target(manualMarkList[i].TargetID);
+        //                            target.Setting((int)manualMarkList[i].point2D().X, (int)manualMarkList[i].point2D().Y);
+        //                            target.setPoint3D(manualMarkList[i].point3D());
+        //                            manualPingList.Add(target);
+        //                        }
+        //                        else
+        //                        {
+        //                            for (int j = 0; j < manualPingList.Count; j++)
+        //                            {
+        //                                if (CompareTwoPoint(manualPingList[j].point2D(), manualMarkList[i].point2D()))
+        //                                {
+        //                                    //同一點不記錄
+        //                                    isDuplicate = true;
+        //                                    break;
+        //                                }
+        //                            }
+        //                            if (!isDuplicate)
+        //                            {
+        //                                if (manualPingList[0].TargetID == manualMarkList[i].TargetID)
+        //                                {
+        //                                    //避免兩個點在同一個地方
+        //                                }
+        //                                else
+        //                                {
+        //                                    Target target = new Target(manualMarkList[i].TargetID);
+        //                                    target.Setting((int)manualMarkList[i].point2D().X, (int)manualMarkList[i].point2D().Y);
+        //                                    target.setPoint3D(manualMarkList[i].point3D());
+        //                                    manualPingList.Add(target);
+        //                                    int count1 = 0;
+        //                                    int count2 = 0;
+        //                                    for (int k = 0; k < manualPingList.Count; k++)
+        //                                    {
+        //                                        if (manualPingList[k].TargetID == 0)
+        //                                        {
+        //                                            count1++;
+        //                                        }
+        //                                        if (manualPingList[k].TargetID == 1)
+        //                                        {
+        //                                            count2++;
+        //                                        }
+        //                                    }
+        //                                    if (count1 == count2)
+        //                                    {
 
-                                                if (true || hintElementList[(int)progressSeq.NowStep].CheckPointIfRoughlyCorrect(manualPingList[0], manualPingList[1], bodies, coordinateMapper)) //先不做驗證
-                                                {
-                                                    hintElementList[(int)progressSeq.NowStep].TagTargetID(manualPingList);
-                                                    HumanBodyHint(manualPingList);
-                                                    TakeSnapShot();
-                                                    snapShotCoolDown = 3;
-                                                    hintProcess.HintGreen();
-                                                    manualPingList = new List<Target>();
+        //                                        if (true || hintElementList[(int)progressSeq.NowStep].CheckPointIfRoughlyCorrect(manualPingList[0], manualPingList[1], bodies, coordinateMapper)) //先不做驗證
+        //                                        {
+        //                                            hintElementList[(int)progressSeq.NowStep].TagTargetID(manualPingList);
+        //                                            HumanBodyHint(manualPingList);
+        //                                            TakeSnapShot();
+        //                                            snapShotCoolDown = 3;
+        //                                            hintProcess.HintGreen();
+        //                                            manualPingList = new List<Target>();
           
-                                                    progressSeq.Start();
-                                                    manualMarkList[0].CleanExpectColorPoint();
-                                                    manualMarkList[1].CleanExpectColorPoint();
-                                                    for (int z = 0; z < hintElementList[(int)progressSeq.NowStep].JointTypeList.Length; z++)
-                                                    {
-                                                        Joint tempJoint = patientBody.Joints[hintElementList[(int)progressSeq.NowStep].JointTypeList[z]];
-                                                        ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
-                                                        colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
-                                                        colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+        //                                            progressSeq.Start();
+        //                                            manualMarkList[0].CleanExpectColorPoint();
+        //                                            manualMarkList[1].CleanExpectColorPoint();
+        //                                            for (int z = 0; z < hintElementList[(int)progressSeq.NowStep].JointTypeList.Length; z++)
+        //                                            {
+        //                                                Joint tempJoint = patientBody.Joints[hintElementList[(int)progressSeq.NowStep].JointTypeList[z]];
+        //                                                ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+        //                                                colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+        //                                                colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
 
-                                                        manualMarkList[0].SetExpectColorPoint(colorPoint.X, colorPoint.Y);
-                                                        manualMarkList[1].SetExpectColorPoint(colorPoint.X, colorPoint.Y);
-                                                    }
+        //                                                manualMarkList[0].SetExpectColorPoint(colorPoint.X, colorPoint.Y);
+        //                                                manualMarkList[1].SetExpectColorPoint(colorPoint.X, colorPoint.Y);
+        //                                            }
                                                     
 
 
-                                                    ProcessHandler();
-                                                }
-                                                else
-                                                {
-                                                    snapShotCoolDown = 3;
-                                                    hintProcess.HintRed();
-                                                    hintProcess.TTSHint("失敗");
-                                                    manualPingList = new List<Target>();
-                                                    ProcessHandler();
-                                                }
+        //                                            ProcessHandler();
+        //                                        }
+        //                                        else
+        //                                        {
+        //                                            snapShotCoolDown = 3;
+        //                                            hintProcess.HintRed();
+        //                                            hintProcess.TTSHint("失敗");
+        //                                            manualPingList = new List<Target>();
+        //                                            ProcessHandler();
+        //                                        }
 
 
-                                            }
+        //                                    }
 
-                                        }
-                                    }
-                                }
+        //                                }
+        //                            }
+        //                        }
 
-                            }
-                        }
+        //                    }
+        //                }
 
-                    }
-                }
-            }
-        }
+        //            }
+        //        }
+        //    }
+        //}
 
         private void Reader_MultiSourceFrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
@@ -901,7 +907,7 @@ namespace KinectCoordinateMapping
 
                         frame.CopyConvertedFrameDataToArray(colorPixels, ColorImageFormat.Bgra);
 
-                        TrackColorBall();
+                        //TrackColorBall();
 
                         if (zoomStruct.IsZoom)
                         {
@@ -942,23 +948,27 @@ namespace KinectCoordinateMapping
                         {
                             ColorInSkeleton = ColorToSkeleton(depthPixels);  //ColorPoint to SkeletonPoint  必須每個frame都作!!
 
+                            for (int i = 0; i < TargetList.Count; i++)
+                            {
+                                TargetList[i].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
+                            }
                             //frameStorage.ColorInSkeleton = ColorInSkeleton;
-                            for (int i = 0; i < modeCommnad.TargetList.Count; i++)
-                            {
-                                modeCommnad.TargetList[i].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
-                            }
-                            for (int i = 0; i < manualMarkList.Count; i++)
-                            {
-                                manualMarkList[i].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
-                            }
-                            for (int i = 0; i < groupList.Count; i++)
-                            {
-                                for (int j = 0; j < groupList[i].groupList.Count; j++)
-                                {
-                                    groupList[i].groupList[j].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
-                                }
-                                groupList[i].Calculate();
-                            }
+                            //for (int i = 0; i < modeCommnad.TargetList.Count; i++)
+                            //{
+                            //    modeCommnad.TargetList[i].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
+                            //}
+                            //for (int i = 0; i < manualMarkList.Count; i++)
+                            //{
+                            //    manualMarkList[i].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
+                            //}
+                            //for (int i = 0; i < groupList.Count; i++)
+                            //{
+                            //    for (int j = 0; j < groupList[i].groupList.Count; j++)
+                            //    {
+                            //        groupList[i].groupList[j].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
+                            //    }
+                            //    groupList[i].Calculate();
+                            //}
                             frameskipcount = 0;
                         }
                         frameskipcount++;
@@ -1100,14 +1110,14 @@ namespace KinectCoordinateMapping
 
         private void Calculate()
         {
-            if (measureMode == mode.AngleMode && modeCommnad.TargetList.Count == 3)
-            {
-                angle = AngleCal.AngleBetween(modeCommnad.TargetList[0], modeCommnad.TargetList[1], modeCommnad.TargetList[2]);
-            }
-            else if ((measureMode == mode.LenghtMode || measureMode == mode.LineBisection) && modeCommnad.TargetList.Count == 2)
-            {
-                measuredLength = AngleCal.Length(modeCommnad.TargetList[0], modeCommnad.TargetList[1]);
-            }
+            //if (measureMode == mode.AngleMode && modeCommnad.TargetList.Count == 3)
+            //{
+            //    angle = AngleCal.AngleBetween(modeCommnad.TargetList[0], modeCommnad.TargetList[1], modeCommnad.TargetList[2]);
+            //}
+            //else if ((measureMode == mode.LenghtMode || measureMode == mode.LineBisection) && modeCommnad.TargetList.Count == 2)
+            //{
+            //    measuredLength = AngleCal.Length(modeCommnad.TargetList[0], modeCommnad.TargetList[1]);
+            //}
         }
 
         public void RightMouseUp(int x, int y, int index)
@@ -1136,7 +1146,7 @@ namespace KinectCoordinateMapping
 
         private void DrawCurrent()
         {
-            modeCommnad.Draw(canvas, displayStruct);
+            //modeCommnad.Draw(canvas, displayStruct);
         }
 
         private void DrawManualMark()
@@ -1165,7 +1175,7 @@ namespace KinectCoordinateMapping
 
         public void ClearTargetList()
         {
-            modeCommnad.TargetList = new List<Target>();
+            //modeCommnad.TargetList = new List<Target>();
             Update();
         }
 
@@ -1207,23 +1217,23 @@ namespace KinectCoordinateMapping
 
         private void angleButton_Click(object sender, RoutedEventArgs e)
         {
-            modeCommnad = new AngleCommand(this);
-            measureMode = mode.AngleMode;
-            UpdateModeButton();
+            //modeCommnad = new AngleCommand(this);
+            //measureMode = mode.AngleMode;
+            //UpdateModeButton();
         }
 
         private void lengthButton_Click(object sender, RoutedEventArgs e)
         {
-            modeCommnad = new LineCommand(this);
-            measureMode = mode.LenghtMode;
-            UpdateModeButton();
+            //modeCommnad = new LineCommand(this);
+            //measureMode = mode.LenghtMode;
+            //UpdateModeButton();
         }
 
         private void bisectionButton_Click(object sender, RoutedEventArgs e)
         {
-            modeCommnad = new BisectCommand(this);
-            measureMode = mode.LineBisection;
-            UpdateModeButton();
+            //modeCommnad = new BisectCommand(this);
+            //measureMode = mode.LineBisection;
+            //UpdateModeButton();
         }
 
         public void UpdateModeButton()
@@ -1283,16 +1293,16 @@ namespace KinectCoordinateMapping
 
         private void zoomInButton_Click(object sender, RoutedEventArgs e)
         {
-            measureMode = mode.ZoomIn;
-            modeCommnad = new ZoomInCommand(this);
-            UpdateModeButton();
+            //measureMode = mode.ZoomIn;
+            //modeCommnad = new ZoomInCommand(this);
+            //UpdateModeButton();
         }
 
         private void zoomOutButton_Click(object sender, RoutedEventArgs e)
         {
-            measureMode = mode.ZoomOut;
-            modeCommnad = new ZoomOutCommand(this);
-            UpdateModeButton();
+            //measureMode = mode.ZoomOut;
+            //modeCommnad = new ZoomOutCommand(this);
+            //UpdateModeButton();
         }
 
         private void camera_MouseEnter(object sender, MouseEventArgs e)
@@ -1362,9 +1372,9 @@ namespace KinectCoordinateMapping
 
         private void dragButton_Click(object sender, RoutedEventArgs e)
         {
-            modeCommnad = new DragCommand(this);
-            measureMode = mode.Drag;
-            UpdateModeButton();
+            //modeCommnad = new DragCommand(this);
+            //measureMode = mode.Drag;
+            //UpdateModeButton();
         }
         #endregion
 
@@ -1442,10 +1452,10 @@ namespace KinectCoordinateMapping
 
         private void camera_MouseMove(object sender, MouseEventArgs e)
         {
-            int mouseX = (int)e.GetPosition(canvas).X;
-            int mouseY = (int)e.GetPosition(canvas).Y;
-            modeCommnad.MouseMove(mouseX, mouseY);
-            Update();
+            //int mouseX = (int)e.GetPosition(canvas).X;
+            //int mouseY = (int)e.GetPosition(canvas).Y;
+            //modeCommnad.MouseMove(mouseX, mouseY);
+            //Update();
         }
 
         private void camera_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -1500,76 +1510,97 @@ namespace KinectCoordinateMapping
         {
 
         }
-
+        
         private void Image_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            int mouseX = (int)e.GetPosition(camera).X;
-            int mouseY = (int)e.GetPosition(camera).Y;
-            modeCommnad.LeftButtonRelease(mouseX, mouseY);
-            Update();
+            int mouseX = (int)e.GetPosition(canvas).X;
+            int mouseY = (int)e.GetPosition(canvas).Y;
+            Point tempPoint = CoordinateTransform.TransformFromScreenToFullScreen(mouseX, mouseY, zoomStruct);
+            int x = (int)tempPoint.X;
+            int y = (int)tempPoint.Y;
+            int di = (x + y * 1920);   //di = depthpixel index   
+            int ci = di * 4;
+
+            double UU = -0.169 * colorPixels[ci + 2] - 0.331 * colorPixels[ci + 1] + 0.5 * colorPixels[ci] + 128;
+            double VV = 0.5 * colorPixels[ci + 2] - 0.419 * colorPixels[ci + 1] - 0.081 * colorPixels[ci] + 128;
+            //System.Diagnostics.Debug.WriteLine(UU.ToString() + ", " + VV.ToString());
+
+            setOneColorButton.Background = new SolidColorBrush(Color.FromRgb(colorPixels[ci + 2], colorPixels[ci + 1], colorPixels[ci]));
+            //default1UU = (int)UU;
+            //default1VV = (int)VV;
+
+
+            CatchSuccess = 0;
+            
+            TargetList[cntemp].Setting(x, y, UU, VV);
+            cntemp++;
+            if (cntemp >= 3)
+            {
+                cntemp = 0;
+            }
         }
 
         private void canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            int mouseX = (int)e.GetPosition(camera).X;
-            int mouseY = (int)e.GetPosition(camera).Y;
-            modeCommnad.LeftButtonRelease(mouseX, mouseY);
-            Update();
+            //int mouseX = (int)e.GetPosition(camera).X;
+            //int mouseY = (int)e.GetPosition(camera).Y;
+            //modeCommnad.LeftButtonRelease(mouseX, mouseY);
+            //Update();
         }
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            int mouseX = (int)e.GetPosition(canvas).X;
-            int mouseY = (int)e.GetPosition(canvas).Y;
-            modeCommnad.MouseMove(mouseX, mouseY);
-            Update();
+            //int mouseX = (int)e.GetPosition(canvas).X;
+            //int mouseY = (int)e.GetPosition(canvas).Y;
+            //modeCommnad.MouseMove(mouseX, mouseY);
+            //Update();
         }
 
         private void camera_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            int mouseX = (int)e.GetPosition(camera).X;
-            int mouseY = (int)e.GetPosition(camera).Y;
-            modeCommnad.LeftButtonPress(mouseX, mouseY);
-            Update();
+            //int mouseX = (int)e.GetPosition(camera).X;
+            //int mouseY = (int)e.GetPosition(camera).Y;
+            //modeCommnad.LeftButtonPress(mouseX, mouseY);
+            //Update();
         }
 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            int mouseX = (int)e.GetPosition(canvas).X;
-            int mouseY = (int)e.GetPosition(canvas).Y;
-            modeCommnad.LeftButtonPress(mouseX, mouseY);
-            Update();
+            //int mouseX = (int)e.GetPosition(canvas).X;
+            //int mouseY = (int)e.GetPosition(canvas).Y;
+            //modeCommnad.LeftButtonPress(mouseX, mouseY);
+            //Update();
         }
 
         private void canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            int mouseX = (int)e.GetPosition(canvas).X;
-            int mouseY = (int)e.GetPosition(canvas).Y;
-            MouseScroll(mouseX, mouseY, e.Delta);
-            Update();
+            //int mouseX = (int)e.GetPosition(canvas).X;
+            //int mouseY = (int)e.GetPosition(canvas).Y;
+            //MouseScroll(mouseX, mouseY, e.Delta);
+            //Update();
         }
 
         private void camera_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            int mouseX = (int)e.GetPosition(canvas).X;
-            int mouseY = (int)e.GetPosition(canvas).Y;
-            MouseScroll(mouseX, mouseY, e.Delta);
-            Update();
+            //int mouseX = (int)e.GetPosition(canvas).X;
+            //int mouseY = (int)e.GetPosition(canvas).Y;
+            //MouseScroll(mouseX, mouseY, e.Delta);
+            //Update();
         }
 
         private void MouseScroll(int x, int y, int delta)
         {
-            int mouseX = x;
-            int mouseY = y;
-            int scrollValue = delta;
-            if (measureMode == mode.ZoomIn && scrollValue > 0)
-            {     
-                modeCommnad.LeftButtonRelease(mouseX, mouseY);
-            }
-            else if (measureMode == mode.ZoomOut && scrollValue < 0)
-            {
-                modeCommnad.LeftButtonRelease(mouseX, mouseY);
-            }
+            //int mouseX = x;
+            //int mouseY = y;
+            //int scrollValue = delta;
+            //if (measureMode == mode.ZoomIn && scrollValue > 0)
+            //{     
+            //    modeCommnad.LeftButtonRelease(mouseX, mouseY);
+            //}
+            //else if (measureMode == mode.ZoomOut && scrollValue < 0)
+            //{
+            //    modeCommnad.LeftButtonRelease(mouseX, mouseY);
+            //}
         }
 
         private void visionDetailCollapseButton_Click(object sender, RoutedEventArgs e)
@@ -1764,91 +1795,91 @@ namespace KinectCoordinateMapping
             frameList.Clear();
         }
         
-        private void ProcessHandler()
-        {
-            CalculateFrontResult CFR = new CalculateFrontResult();
+        //private void ProcessHandler()
+        //{
+        //    CalculateFrontResult CFR = new CalculateFrontResult();
 
-            startProcessLabel.Content = hintElementList[(int)progressSeq.NowStep].HintSentence;
-            hintProcess.TTSHint(hintElementList[(int)progressSeq.NowStep].HintSentence);
-            startProcessButton.Content = "完成";
-            HumanBodyHintWarning();
+        //    startProcessLabel.Content = hintElementList[(int)progressSeq.NowStep].HintSentence;
+        //    hintProcess.TTSHint(hintElementList[(int)progressSeq.NowStep].HintSentence);
+        //    startProcessButton.Content = "完成";
+        //    //HumanBodyHintWarning();
             
-            if (progressSeq.NowStep == Step.FrontReady)
-            {
-                hintCoolDown = 0;
-                startProcessButton.Content = "完成";
+        //    if (progressSeq.NowStep == Step.FrontReady)
+        //    {
+        //        hintCoolDown = 0;
+        //        startProcessButton.Content = "完成";
         
-                readyCoolDown = 10;
-            }
-            else if (progressSeq.NowStep == Step.BackReady)
-            {
-                hintCoolDown = 0;
-                startProcessButton.Content = "完成";
-                frontFrameStorage = frameStorageFusion.FuseBodyPoint(frameList);
+        //        readyCoolDown = 10;
+        //    }
+        //    else if (progressSeq.NowStep == Step.BackReady)
+        //    {
+        //        hintCoolDown = 0;
+        //        startProcessButton.Content = "完成";
+        //        frontFrameStorage = frameStorageFusion.FuseBodyPoint(frameList);
 
            
-                readyCoolDown = 10;
-                isReadToSnapShot = true;
-                frameList.Add(frontFrameStorage);
-                AddItemToList();
+        //        readyCoolDown = 10;
+        //        isReadToSnapShot = true;
+        //        frameList.Add(frontFrameStorage);
+        //        AddItemToList();
 
-                Data = CFR.CalculateResult(Data, frontFrameStorage, canvas, zoomStruct, displayStruct);
-                startFrameIndex = frameList.Count;
-            }
-            else if (progressSeq.NowStep == Step.SideReady)
-            {
-                hintCoolDown = 0;
-                startProcessButton.Content = "完成";
-                backFrameStorage = frameStorageFusion.FuseBodyPoint(frameList, startFrameIndex, frameList.Count);
-                //hintProcess.TTSHint("準備照相");
-                readyCoolDown = 10;
+        //        Data = CFR.CalculateResult(Data, frontFrameStorage, canvas, zoomStruct, displayStruct);
+        //        startFrameIndex = frameList.Count;
+        //    }
+        //    else if (progressSeq.NowStep == Step.SideReady)
+        //    {
+        //        hintCoolDown = 0;
+        //        startProcessButton.Content = "完成";
+        //        backFrameStorage = frameStorageFusion.FuseBodyPoint(frameList, startFrameIndex, frameList.Count);
+        //        //hintProcess.TTSHint("準備照相");
+        //        readyCoolDown = 10;
 
-                isReadToSnapShot = true;
-                frameList.Add(backFrameStorage);
-                AddItemToList();
+        //        isReadToSnapShot = true;
+        //        frameList.Add(backFrameStorage);
+        //        AddItemToList();
 
-                Data = CFR.CalculateBackResult(Data, backFrameStorage);
-                startFrameIndex = frameList.Count;
-            }
-            else if (progressSeq.NowStep == Step.Done)
-            {
-                hintCoolDown = 0;
-                startProcessButton.Content = "完成";
+        //        Data = CFR.CalculateBackResult(Data, backFrameStorage);
+        //        startFrameIndex = frameList.Count;
+        //    }
+        //    else if (progressSeq.NowStep == Step.Done)
+        //    {
+        //        hintCoolDown = 0;
+        //        startProcessButton.Content = "完成";
 
-                sideFrameStorage = frameStorageFusion.FuseBodyPoint(frameList, startFrameIndex, frameList.Count);
+        //        sideFrameStorage = frameStorageFusion.FuseBodyPoint(frameList, startFrameIndex, frameList.Count);
 
-                isReadToSnapShot = true;
-                frameList.Add(sideFrameStorage);
-                AddItemToList();
-                //全部完成
-                Data = CFR.CalculateSideResult(Data, sideFrameStorage);
-            }
-            else
-            {
-                manualMarkList[0].CleanExpectColorPoint();
-                manualMarkList[1].CleanExpectColorPoint();
-                if (patientBody != null)
-                {
-                    for (int z = 0; z < hintElementList[(int)progressSeq.NowStep].JointTypeList.Length; z++)
-                    {
-                        Joint tempJoint = patientBody.Joints[hintElementList[(int)progressSeq.NowStep].JointTypeList[z]];
-                        ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
-                        colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
-                        colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+        //        isReadToSnapShot = true;
+        //        frameList.Add(sideFrameStorage);
+        //        AddItemToList();
+        //        //全部完成
+        //        Data = CFR.CalculateSideResult(Data, sideFrameStorage);
+        //    }
+        //    else
+        //    {
+        //        manualMarkList[0].CleanExpectColorPoint();
+        //        manualMarkList[1].CleanExpectColorPoint();
+        //        if (patientBody != null)
+        //        {
+        //            for (int z = 0; z < hintElementList[(int)progressSeq.NowStep].JointTypeList.Length; z++)
+        //            {
+        //                Joint tempJoint = patientBody.Joints[hintElementList[(int)progressSeq.NowStep].JointTypeList[z]];
+        //                ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+        //                colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+        //                colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
 
-                        manualMarkList[0].SetExpectColorPoint(colorPoint.X, colorPoint.Y);
-                        manualMarkList[1].SetExpectColorPoint(colorPoint.X, colorPoint.Y);
-                    }
-                }
-                startProcessButton.Content = "跳過這步";
-                hintCoolDown = 10;
-            }
-        }
+        //                manualMarkList[0].SetExpectColorPoint(colorPoint.X, colorPoint.Y);
+        //                manualMarkList[1].SetExpectColorPoint(colorPoint.X, colorPoint.Y);
+        //            }
+        //        }
+        //        startProcessButton.Content = "跳過這步";
+        //        hintCoolDown = 10;
+        //    }
+        //}
 
         private void startProcessButton_Click(object sender, RoutedEventArgs e)
         {
             progressSeq.Start();
-            ProcessHandler();
+            //ProcessHandler();
         }
 
         private void manualFusionButton_Click(object sender, RoutedEventArgs e)
