@@ -86,7 +86,7 @@
             </Menu>
 
         </DockPanel>
-        <ListView x:Name="historyListView" HorizontalAlignment="Left" Height="514" Margin="840,43,0,0" VerticalAlignment="Top" Width="130" SelectionChanged="historyListView_SelectionChanged">
+        <ListView x:Name="historyListView" HorizontalAlignment="Left" Height="514" Margin="840,43,0,0" VerticalAlignment="Top" Width="130" SelectionChanged="historyListView_SelectionChanged" >
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
@@ -100,27 +100,28 @@
             <Button x:Name="setOneColorButton" Content="設定一號顏色" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="85" Click="setOneColorButton_Click" Background="#FF86CF2E"/>
             <Button x:Name="setTwoColorButton" Content="設定二號顏色" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top" Width="85" Click="setTwoColorButton_Click" Background="#FFFFEB26"/>
             <Label x:Name="setColorHintLabel" Content="" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="110"/>
-            <StatusBar HorizontalAlignment="Stretch" x:Name="statusBar" Background="White" Margin="0,48,10,5" Foreground="#FF423434" >
-                <StatusBarItem x:Name="kinectStatusBarItem" Content="" Height="34" />
+            <StatusBar HorizontalAlignment="Stretch" x:Name="statusBar" Background="White" Margin="0,43,25,-10" Foreground="#FF423434" >
+                <StatusBarItem x:Name="kinectStatusBarItem" Content="" Height="34" Margin="0,2,0,3" Width="170" />
             </StatusBar>
         </Grid>
-        <Grid HorizontalAlignment="Left" Height="159" Margin="650,408,0,0" VerticalAlignment="Top" Width="185">
+        <Grid HorizontalAlignment="Left" Height="152" Margin="650,408,0,0" VerticalAlignment="Top" Width="185">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
-            <Button x:Name="button" Content="Hip Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90"/>
-            <Button x:Name="button_Copy" Content="Kicking Straight" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,24,0,0"/>
-            <Button x:Name="button_Copy1" Content="Heel Raise" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,48,0,0"/>
-            <Button x:Name="button_Copy2" Content="Toe Raise" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,72,0,0"/>
-            <Button x:Name="button_Copy3" Content="Hip Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,91,0,0"/>
-            <Button x:Name="button_Copy4" Content="Elbow Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,0,0,0"/>
-            <Button x:Name="button_Copy5" Content="Shoulder Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,24,0,0"/>
-            <Button x:Name="button_Copy6" Content="Shoulder Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,48,0,0"/>
-            <Button x:Name="button_Copy7" Content="Shoulder Extension" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,72,0,0"/>
-            <Button x:Name="button_Copy8" Content="External Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,91,0,0"/>
-            <Button x:Name="button_Copy9" Content="External Rotation at 90" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="0,115,0,0" Height="22"/>
-            <Button x:Name="button_Copy10" Content="Internal Rotation at 90" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="0,137,0,0"/>
+            <Button x:Name="hipFlexionButton" Content="Hip Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90"/>
+            <Button x:Name="kickingstraightButton" Content="Kicking Straight" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,24,0,0"/>
+            <Button x:Name="heelRaiseButton" Content="Heel Raise" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,48,0,0"/>
+            <Button x:Name="toeRaiseButton" Content="Toe Raise" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,72,0,0"/>
+            <Button x:Name="hipAbductionButton" Content="Hip Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,91,0,0"/>
+            <Button x:Name="elbowFlexionButton" Content="Elbow Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,0,0,0"/>
+            <Button x:Name="shoulderFlexionButton" Content="Shoulder Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,24,0,0"/>
+            <Button x:Name="shoulderAbductionButton" Content="Shoulder Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,48,0,0"/>
+            <Button x:Name="shoulderExtensionButton" Content="Shoulder Extension" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,72,0,0"/>
+            <Button x:Name="externalRotationButton" Content="External Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,91,0,0"/>
+            <Button x:Name="externalRotation90Button" Content="External Rotation at 90" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="0,115,0,0" Height="22"/>
+            <Button x:Name="internalRotation90Button" Content="Internal Rotation at 90" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="0,137,0,0"/>
         </Grid>
+        
 
 
 

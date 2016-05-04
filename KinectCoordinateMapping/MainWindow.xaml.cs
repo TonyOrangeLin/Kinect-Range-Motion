@@ -20,7 +20,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Media.Media3D;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Microsoft.Kinect.Face;
+
 using System.Windows.Threading;
 using System.Media;
 using System.Globalization;
@@ -108,11 +108,7 @@ namespace KinectCoordinateMapping
         /// </summary>
         Vector4 floorVector4D;
 
-        // The face frame source
-        FaceFrameSource _faceSource = null;
-
-        // The face frame reader
-        FaceFrameReader _faceReader = null;
+       
         BitmapSource originBitampSource;
         //private bool[] bodyIndexPixels = new bool[1920 * 1080];
         /// <summary>
@@ -319,17 +315,7 @@ namespace KinectCoordinateMapping
                 dotDisplayUpdate();
                 UpdateModeButton();
 
-                // Initialize the face source with the desired features
-                _faceSource = new FaceFrameSource(_sensor, 0, FaceFrameFeatures.BoundingBoxInColorSpace |
-                                                              FaceFrameFeatures.FaceEngagement |
-                                                              FaceFrameFeatures.Glasses |
-                                                              FaceFrameFeatures.Happy |
-                                                              FaceFrameFeatures.LeftEyeClosed |
-                                                              FaceFrameFeatures.MouthOpen |
-                                                              FaceFrameFeatures.PointsInColorSpace |
-                                                              FaceFrameFeatures.RightEyeClosed);
-                _faceReader = _faceSource.OpenReader();
-                _faceReader.FrameArrived += FaceReader_FrameArrived;
+               
             }
 
             this.KinectStatusText = this._sensor.IsAvailable ? Properties.Resources.RunningStatusText
@@ -375,37 +361,7 @@ namespace KinectCoordinateMapping
             hintElementList.Add(new HintDone());
         }
 
-        private void FaceReader_FrameArrived(object sender, FaceFrameArrivedEventArgs e)
-        {
-            using (var frame = e.FrameReference.AcquireFrame())
-            {
-                if (frame != null)
-                {
-                    // Get the face frame result
-                    FaceFrameResult result = frame.FaceFrameResult;
 
-                    //var result2 = frame.FaceFrameSource;
-
-
-                    //result2.FaceFrameFeatures;
-                    if (result != null)
-                    {
-
-                        // Get the face points, mapped in the color space
-                        var eyeLeft = result.FacePointsInColorSpace[FacePointType.EyeLeft];
-                        var eyeRight = result.FacePointsInColorSpace[FacePointType.EyeRight];
-                        var nose = result.FacePointsInColorSpace[FacePointType.Nose];
-                        var mouthLeft = result.FacePointsInColorSpace[FacePointType.MouthCornerLeft];
-                        var mouthRight = result.FacePointsInColorSpace[FacePointType.MouthCornerRight];
-
-                        // Get the face characteristics
-                        var eyeLeftClosed = result.FaceProperties[FaceProperty.LeftEyeClosed];
-                        var eyeRightClosed = result.FaceProperties[FaceProperty.RightEyeClosed];
-                        var mouthOpen = result.FaceProperties[FaceProperty.MouthOpen];
-                    }
-                }
-            }
-        }
 
         private void Window_Closed(object sender, EventArgs e)
         {
