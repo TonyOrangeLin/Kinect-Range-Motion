@@ -37,9 +37,10 @@ namespace KinectCoordinateMapping
     /// </summary>
     /// 
     public enum mode {None, AngleMode, LenghtMode, PlaneMode, LineBisection, ZoomIn, ZoomOut, Drag};
-
+    public enum MotionMode {None, HipFlexion, KickStraight, HeelRaise, ToeRaise, HipAbduction, ElbowFlexion, ShoulderFlexion, ShoulderAbduction, ShoulderExtension, ExternalRotation, ExternalRotation90, InternalRotation };
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        int cntemplimit = 4;
         private KinectSensor _sensor;
         private MultiSourceFrameReader _reader;
         private List<Target> TargetList = new List<Target>();
@@ -80,7 +81,7 @@ namespace KinectCoordinateMapping
         int zoomOffsetX = 0;
         int zoomOffestY = 0;
         bool isDotDisplay = true;
-        //CommandInterface modeCommnad;
+        CommandInterface modeCommnad;
         protected int startX;
         protected int startY;
         protected int middleX;
@@ -212,7 +213,7 @@ namespace KinectCoordinateMapping
         int CatchSuccess = 0;
         Body patientFrontBody;
         bool takePatienBodyDataFlag = false;
-
+        MotionMode motionMode = MotionMode.None;
         public MainWindow()
         {
             InitializeComponent();
@@ -278,9 +279,7 @@ namespace KinectCoordinateMapping
             groupList = new List<Group>();
             zoomStruct = new ZoomStruct();
             displayStruct = new DisplayStruct();
-            //modeCommnad = new ZoomInCommand(this);
-
-
+            modeCommnad = new ZoomInCommand(this);
 
             //record = new Record();
             //playback = new Playback();
@@ -366,8 +365,6 @@ namespace KinectCoordinateMapping
                 TargetList.Add(target2);
             }
         }
-
-
 
         private void Window_Closed(object sender, EventArgs e)
         {
@@ -995,15 +992,15 @@ namespace KinectCoordinateMapping
                                 {
                                     //紀錄兩點鐘垂腺的地方
                                 }
-                                if (takePatienBodyDataFlag)
-                                {
-                                    patientFrontBody = patientBody;
-                                    takePatienBodyDataFlag = false;
-                                }
-                                if (patientBody == null)
-                                {
+                                //if (takePatienBodyDataFlag)
+                                //{
+                                //    patientFrontBody = patientBody;
+                                //    takePatienBodyDataFlag = false;
+                                //}
+                                //if (patientBody == null)
+                                //{
                                     patientBody = body;
-                                }
+                                //}
                                 //if (patientBody != null)
                                 //{
                                 //    //hintProcess.TTSHint("偵測到人體");
@@ -1053,15 +1050,21 @@ namespace KinectCoordinateMapping
                 }
             }
             Calculate();
-            if (drawCoolDown >= 3)
-            {
+
+            
+
+            
+            //if (drawCoolDown >= 3)
+            //{
                 Draw();
-                drawCoolDown = 0;
-            }
-            else
-            {
-                drawCoolDown++;
-            }
+
+            
+            //    drawCoolDown = 0;
+            //}
+            //else
+            //{
+            //    drawCoolDown++;
+            //}
         }
 
         private bool isInfinity(CameraSpacePoint input)
@@ -1142,7 +1145,37 @@ namespace KinectCoordinateMapping
             DrawHistoryGroup();
             DrawCurrent();
             DrawManualMark();
-            DrawOther();
+            //DrawOther();
+        }
+
+        private void DrawRangeMotion()
+        {
+            if (motionMode == MotionMode.HipFlexion)
+            {
+                double LegAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                AddPixel.Text(point.X + 30, point.Y - 20, LegAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                Polygon myPolygon = new Polygon();
+                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
+                myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
+                myPolygon.StrokeThickness = 2;
+                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
+                PointCollection myPointCollection = new PointCollection();
+                myPointCollection.Add(Point1);
+                myPointCollection.Add(Point2);
+                myPointCollection.Add(Point3);
+                myPolygon.Points = myPointCollection;
+
+                canvas.Children.Add(myPolygon);
+            }
         }
 
         public void ClearTargetList()
@@ -1265,16 +1298,16 @@ namespace KinectCoordinateMapping
 
         private void zoomInButton_Click(object sender, RoutedEventArgs e)
         {
-            //measureMode = mode.ZoomIn;
-            //modeCommnad = new ZoomInCommand(this);
-            //UpdateModeButton();
+            measureMode = mode.ZoomIn;
+            modeCommnad = new ZoomInCommand(this);
+            UpdateModeButton();
         }
 
         private void zoomOutButton_Click(object sender, RoutedEventArgs e)
         {
-            //measureMode = mode.ZoomOut;
-            //modeCommnad = new ZoomOutCommand(this);
-            //UpdateModeButton();
+            measureMode = mode.ZoomOut;
+            modeCommnad = new ZoomOutCommand(this);
+            UpdateModeButton();
         }
 
         private void camera_MouseEnter(object sender, MouseEventArgs e)
@@ -1344,9 +1377,9 @@ namespace KinectCoordinateMapping
 
         private void dragButton_Click(object sender, RoutedEventArgs e)
         {
-            //modeCommnad = new DragCommand(this);
-            //measureMode = mode.Drag;
-            //UpdateModeButton();
+            modeCommnad = new DragCommand(this);
+            measureMode = mode.Drag;
+            UpdateModeButton();
         }
         #endregion
 
@@ -1358,42 +1391,12 @@ namespace KinectCoordinateMapping
             {
                 if (patientBody.IsTracked)
                 {
-                    //foreach (Joint joint in patientBody.Joints.Values)
-                    //{
-                    //    if (joint.TrackingState == TrackingState.Tracked)
-                    //    {
-                    //        // 3D space point
-                    //        CameraSpacePoint jointPosition = joint.Position;
-
-                    //        // 2D space point
-                    //        Point point = new Point();
-
-                    //        ColorSpacePoint colorPoint = _sensor.CoordinateMapper.MapCameraPointToColorSpace(jointPosition);
-
-                    //        point.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
-                    //        point.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
-
-                    //        point = CoordinateTransform.ReverseFromFullScreenToScreen((int)point.X, (int)point.Y, zoomStruct);
-                    //        // Draw
-                    //        Ellipse ellipse = new Ellipse
-                    //        {
-                    //            Fill = Brushes.Green,
-                    //            Width = 6,
-                    //            Height = 6
-                    //        };
-
-                    //        Canvas.SetLeft(ellipse, point.X - ellipse.Width / 2);
-                    //        Canvas.SetTop(ellipse, point.Y - ellipse.Height / 2);
-
-                    //        canvas.Children.Add(ellipse);
-                    //    }
-                    //}
-
-                    if (hintElementList[(int)progressSeq.NowStep].JointTypeList != null)
+                    foreach (Joint joint in patientBody.Joints.Values)
                     {
-                        for (int i = 0; i < hintElementList[(int)progressSeq.NowStep].JointTypeList.Length; i++)
+                        if (joint.TrackingState == TrackingState.Tracked)
                         {
-                            CameraSpacePoint jointPosition = patientBody.Joints[hintElementList[(int)progressSeq.NowStep].JointTypeList[i]].Position;
+                            // 3D space point
+                            CameraSpacePoint jointPosition = joint.Position;
 
                             // 2D space point
                             Point point = new Point();
@@ -1407,9 +1410,9 @@ namespace KinectCoordinateMapping
                             // Draw
                             Ellipse ellipse = new Ellipse
                             {
-                                Fill = Brushes.Brown,
-                                Width = 30,
-                                Height = 30
+                                Fill = Brushes.Green,
+                                Width = 6,
+                                Height = 6
                             };
 
                             Canvas.SetLeft(ellipse, point.X - ellipse.Width / 2);
@@ -1418,16 +1421,46 @@ namespace KinectCoordinateMapping
                             canvas.Children.Add(ellipse);
                         }
                     }
+
+                    //if (hintElementList[(int)progressSeq.NowStep].JointTypeList != null)
+                    //{
+                    //    for (int i = 0; i < hintElementList[(int)progressSeq.NowStep].JointTypeList.Length; i++)
+                    //    {
+                    //        CameraSpacePoint jointPosition = patientBody.Joints[hintElementList[(int)progressSeq.NowStep].JointTypeList[i]].Position;
+
+                    //        // 2D space point
+                    //        Point point = new Point();
+
+                    //        ColorSpacePoint colorPoint = _sensor.CoordinateMapper.MapCameraPointToColorSpace(jointPosition);
+
+                    //        point.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                    //        point.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+
+                    //        point = CoordinateTransform.ReverseFromFullScreenToScreen((int)point.X, (int)point.Y, zoomStruct);
+                    //        // Draw
+                    //        Ellipse ellipse = new Ellipse
+                    //        {
+                    //            Fill = Brushes.Brown,
+                    //            Width = 30,
+                    //            Height = 30
+                    //        };
+
+                    //        Canvas.SetLeft(ellipse, point.X - ellipse.Width / 2);
+                    //        Canvas.SetTop(ellipse, point.Y - ellipse.Height / 2);
+
+                    //        canvas.Children.Add(ellipse);
+                    //    }
+                    //}
                 }
             }
         }
 
         private void camera_MouseMove(object sender, MouseEventArgs e)
         {
-            //int mouseX = (int)e.GetPosition(canvas).X;
-            //int mouseY = (int)e.GetPosition(canvas).Y;
-            //modeCommnad.MouseMove(mouseX, mouseY);
-            //Update();
+            int mouseX = (int)e.GetPosition(canvas).X;
+            int mouseY = (int)e.GetPosition(canvas).Y;
+            modeCommnad.MouseMove(mouseX, mouseY);
+            Update();
         }
 
         private void camera_MouseRightButtonUp(object sender, MouseButtonEventArgs e)
@@ -1506,73 +1539,73 @@ namespace KinectCoordinateMapping
             
             TargetList[cntemp].Setting(x, y, UU, VV);
             cntemp++;
-            if (cntemp >= 3)
+            if (cntemp >= cntemplimit)
             {
                 cntemp = 0;
             }
         }
-
+        
         private void canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            //int mouseX = (int)e.GetPosition(camera).X;
-            //int mouseY = (int)e.GetPosition(camera).Y;
-            //modeCommnad.LeftButtonRelease(mouseX, mouseY);
-            //Update();
+            int mouseX = (int)e.GetPosition(camera).X;
+            int mouseY = (int)e.GetPosition(camera).Y;
+            modeCommnad.LeftButtonRelease(mouseX, mouseY);
+            Update();
         }
 
         private void canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            //int mouseX = (int)e.GetPosition(canvas).X;
-            //int mouseY = (int)e.GetPosition(canvas).Y;
-            //modeCommnad.MouseMove(mouseX, mouseY);
-            //Update();
+            int mouseX = (int)e.GetPosition(canvas).X;
+            int mouseY = (int)e.GetPosition(canvas).Y;
+            modeCommnad.MouseMove(mouseX, mouseY);
+            Update();
         }
 
         private void camera_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //int mouseX = (int)e.GetPosition(camera).X;
-            //int mouseY = (int)e.GetPosition(camera).Y;
-            //modeCommnad.LeftButtonPress(mouseX, mouseY);
-            //Update();
+            int mouseX = (int)e.GetPosition(camera).X;
+            int mouseY = (int)e.GetPosition(camera).Y;
+            modeCommnad.LeftButtonPress(mouseX, mouseY);
+            Update();
         }
 
         private void canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //int mouseX = (int)e.GetPosition(canvas).X;
-            //int mouseY = (int)e.GetPosition(canvas).Y;
-            //modeCommnad.LeftButtonPress(mouseX, mouseY);
-            //Update();
+            int mouseX = (int)e.GetPosition(canvas).X;
+            int mouseY = (int)e.GetPosition(canvas).Y;
+            modeCommnad.LeftButtonPress(mouseX, mouseY);
+            Update();
         }
 
         private void canvas_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            //int mouseX = (int)e.GetPosition(canvas).X;
-            //int mouseY = (int)e.GetPosition(canvas).Y;
-            //MouseScroll(mouseX, mouseY, e.Delta);
-            //Update();
+            int mouseX = (int)e.GetPosition(canvas).X;
+            int mouseY = (int)e.GetPosition(canvas).Y;
+            MouseScroll(mouseX, mouseY, e.Delta);
+            Update();
         }
 
         private void camera_MouseWheel(object sender, MouseWheelEventArgs e)
         {
-            //int mouseX = (int)e.GetPosition(canvas).X;
-            //int mouseY = (int)e.GetPosition(canvas).Y;
-            //MouseScroll(mouseX, mouseY, e.Delta);
-            //Update();
+            int mouseX = (int)e.GetPosition(canvas).X;
+            int mouseY = (int)e.GetPosition(canvas).Y;
+            MouseScroll(mouseX, mouseY, e.Delta);
+            Update();
         }
 
         private void MouseScroll(int x, int y, int delta)
         {
-            //int mouseX = x;
-            //int mouseY = y;
-            //int scrollValue = delta;
-            //if (measureMode == mode.ZoomIn && scrollValue > 0)
-            //{     
-            //    modeCommnad.LeftButtonRelease(mouseX, mouseY);
-            //}
-            //else if (measureMode == mode.ZoomOut && scrollValue < 0)
-            //{
-            //    modeCommnad.LeftButtonRelease(mouseX, mouseY);
-            //}
+            int mouseX = x;
+            int mouseY = y;
+            int scrollValue = delta;
+            if (measureMode == mode.ZoomIn && scrollValue > 0)
+            {
+                modeCommnad.LeftButtonRelease(mouseX, mouseY);
+            }
+            else if (measureMode == mode.ZoomOut && scrollValue < 0)
+            {
+                modeCommnad.LeftButtonRelease(mouseX, mouseY);
+            }
         }
 
         private void visionDetailCollapseButton_Click(object sender, RoutedEventArgs e)
@@ -1592,8 +1625,6 @@ namespace KinectCoordinateMapping
             Calculate();
             Draw();
         }
-
-        
 
         private void saveResultButton_Click(object sender, RoutedEventArgs e)
         {
@@ -1673,7 +1704,7 @@ namespace KinectCoordinateMapping
 
         private void LoadDataClick(object sender, RoutedEventArgs e)
         {
-            LoadFile();
+            //LoadFile();
         }
 
         private void historyListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1682,8 +1713,6 @@ namespace KinectCoordinateMapping
             if (isSnapShot)
             {
                 replayFrame = frameList[index];
-
-
             }
         }
 
@@ -1872,36 +1901,257 @@ namespace KinectCoordinateMapping
             target = new Target(1);
             target.Setting(0, 0, default2UU, default2VV);//yellow
             manualMarkList.Add(target);
-        }
-
-        private void LoadFile()
-        {
-            IFormatter binFmt = new BinaryFormatter();
-            Stream s = File.Open(OpenFileForPlayback(), FileMode.Open);
-            FrameStorage myobj = (FrameStorage)binFmt.Deserialize(s);
-            s.Close();
-        }
-
-        private string lastFile = string.Empty;
-
-        private string OpenFileForPlayback()
-        {
-            string fileName = string.Empty;
-
-            OpenFileDialog dlg = new OpenFileDialog();
-            dlg.FileName = this.lastFile;
-            //dlg.DefaultExt = Properties.Resources.; // Default file extension
-            //dlg.Filter = Properties.Resources.EventFileDescription + " " + Properties.Resources.EventFileFilter; // Filter files by extension 
-            bool? result = dlg.ShowDialog();
-
-            if (result == true)
+            int NumbersOfTarget = 10;
+            TargetList = new List<Target>();
+            for (int t = 0; t <= NumbersOfTarget; t++)
             {
-                fileName = dlg.FileName;
+                Target target2 = new Target(t);
+                TargetList.Add(target2);
             }
-
-            return fileName;
+            cntemp = 0;
         }
 
 
+        private void RangeMotionModeButtonClicked(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            //腿部動作
+            if (btn.Content.ToString().Contains("Hip Flexion"))
+            {
+                motionMode = MotionMode.HipFlexion;
+                angleLimitLabel1.Content = "大腿與身體角度";
+                angleLimitLabel2.Content = "膝蓋角度";
+                cntemplimit = 4;
+            }
+            if (btn.Content.ToString().Contains("Kick Straight"))
+            {
+                motionMode = MotionMode.KickStraight;
+                angleLimitLabel1.Content = "膝蓋角度";
+                angleLimitLabel2.Content = "無";
+                cntemplimit = 3;
+            }
+            if (btn.Content.ToString().Contains("Heel Raise"))
+            {
+                motionMode = MotionMode.HeelRaise;
+                angleLimitLabel1.Content = "腳跟角度";
+                angleLimitLabel2.Content = "無";
+                cntemplimit = 3;
+            }
+            if (btn.Content.ToString().Contains("Toe Raise"))
+            {
+                motionMode = MotionMode.ToeRaise;
+                angleLimitLabel1.Content = "腳跟角度";
+                angleLimitLabel2.Content = "無";
+                cntemplimit = 3;
+            }
+            if (btn.Content.ToString().Contains("Hip Abduction"))
+            {
+                motionMode = MotionMode.HipAbduction;
+                angleLimitLabel1.Content = "膝蓋角度";
+                angleLimitLabel2.Content = "無";
+                cntemplimit = 4;
+            }
+            /*******************************************************/
+            //手部
+            /******************************************************/
+            if (btn.Content.ToString().Contains("Elbow Flexion"))
+            {
+                motionMode = MotionMode.ElbowFlexion;
+                cntemplimit = 3;
+            }
+            if (btn.Content.ToString().Contains("Shoulder Flexion"))
+            {
+                motionMode = MotionMode.ShoulderFlexion;
+                cntemplimit = 4;
+            }
+            if (btn.Content.ToString().Contains("Shoulder Abduction"))
+            {
+                motionMode = MotionMode.ShoulderAbduction;
+            }
+            if (btn.Content.ToString().Contains("Shoulder Extension"))
+            {
+                motionMode = MotionMode.ShoulderExtension;
+            }
+            if (btn.Content.ToString().Contains("External Rotation"))
+            {
+                motionMode = MotionMode.ExternalRotation;
+            }
+            if (btn.Content.ToString().Contains("External Rotation at 90"))
+            {
+                motionMode = MotionMode.ExternalRotation90;
+            }
+            if (btn.Content.ToString().Contains("Internal Rotation at 90"))
+            {
+                motionMode = MotionMode.InternalRotation;
+            }
+        }
+
+        private void FindTargetBall(MotionMode motionmode, Body[] bodies)
+        {
+            foreach (Body body in this.bodies)
+            {
+                if (body.IsTracked)
+                {
+                    /*******************************************************/
+                    //腿部
+                    /******************************************************/
+                    if (motionmode == MotionMode.HipFlexion)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.AnkleRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);  
+                        }
+                        if (!TargetList[1].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.KneeRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[1].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[2].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.HipRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[3].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.ShoulderRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[3].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                    }
+                    if (motionmode == MotionMode.KickStraight)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.AnkleRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[1].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.KneeRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[1].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[2].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.HipRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                       
+                    }
+                    if (motionmode == MotionMode.HeelRaise)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.FootRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[1].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.AnkleRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[1].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[2].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.KneeRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                    }
+                    if (motionmode == MotionMode.ToeRaise)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.FootRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[1].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.AnkleRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[1].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[2].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.KneeRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+
+                    }
+                    if (motionmode == MotionMode.HipAbduction)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.FootRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[1].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.AnkleRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[1].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[2].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.KneeRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+
+                    }
+                    /*******************************************************/
+                    //手部
+                    /******************************************************/
+                }
+            }
+        }
+        private int angleLimit1 = 90;
+        private int angleLimit2 = 90;
+        private void doctorSettingEnterbutton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

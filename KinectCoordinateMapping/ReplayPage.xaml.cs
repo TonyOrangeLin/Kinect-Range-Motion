@@ -51,10 +51,10 @@ namespace KinectCoordinateMapping
             {
                 try
                 {
-                    TimeSpan duration = playback.GetPlaybackDuration();
-                    TimeSpan current = playback.GetCurrent();
-                    double percentage = current.TotalMilliseconds / duration.TotalMilliseconds;
-                    playbackProgressBar.Value = percentage * 100;
+                    //TimeSpan duration = playback.GetPlaybackDuration();
+                    //TimeSpan current = playback.GetCurrent();
+                    //double percentage = current.TotalMilliseconds / duration.TotalMilliseconds;
+                    //playbackProgressBar.Value = percentage * 100;
                 }
                 catch
                 {

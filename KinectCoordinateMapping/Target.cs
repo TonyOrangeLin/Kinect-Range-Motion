@@ -22,7 +22,7 @@ namespace KinectCoordinateMapping
         public bool TrackState = false;
         double UU, VV, AverageUU, AverageVV, CenterUU, CenterVV;// KinectHeight = 0.88;  //x, y, z, this uv,average uv, center uv
 
-        int uvRange = 10, SearchRange = 80, CenterUVrange = 10;
+        int uvRange = 10, SearchRange = 40, CenterUVrange = 10;
 
         Point ColorCenter = new Point(0, 0);
         private List<double> xray = new List<double>() { };
@@ -122,14 +122,14 @@ namespace KinectCoordinateMapping
                 //{
                 //    steadyCounter = 0;
                 //}
-                SearchRange = 80;
+                SearchRange = 40;
                 TrackState = true;
                 findPointCounter = 0;
             }
             else
             {
                 TrackState = false;
-                SearchRange = 160;
+                SearchRange = 60;
                 findPointCounter++;
                 if (findPointCounter > 4)
                 {

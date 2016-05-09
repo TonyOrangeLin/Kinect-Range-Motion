@@ -35,7 +35,7 @@
             <Button x:Name="zoomOutButton" Content="縮小" HorizontalAlignment="Left" Margin="65,202,0,0" VerticalAlignment="Top" Width="45" Height="25" Click="zoomOutButton_Click" Background="White"/>
             <CheckBox Content="ShowXYZ" Height="16" HorizontalAlignment="Left" Margin="15,271,0,0" x:Name="checkBoxShowXYZ" VerticalAlignment="Top" Width="83" />
 
-            <Button x:Name="undoButton" Content="上一步" HorizontalAlignment="Left" Margin="5,232,0,0" VerticalAlignment="Top" Width="105" Click="undoButton_Click" Height="25" Background="White"/>
+            <Button x:Name="undoButton" Content="上一步" HorizontalAlignment="Left" Margin="5,232,0,0" VerticalAlignment="Top" Width="105" Click="undoButton_Click" Height="25" Background="DimGray"/>
         </Grid>
         <Grid x:Name="RecordGrid" HorizontalAlignment="Left" Height="75" Margin="20,485,0,0" VerticalAlignment="Top" Width="425">
             <Frame x:Name="replayFramework" Source="ReplayPage.xaml" Margin="0,2,0,-2"/>
@@ -86,7 +86,7 @@
             </Menu>
 
         </DockPanel>
-        <ListView x:Name="historyListView" HorizontalAlignment="Left" Height="514" Margin="840,43,0,0" VerticalAlignment="Top" Width="130" SelectionChanged="historyListView_SelectionChanged" >
+        <ListView x:Name="historyListView" HorizontalAlignment="Left" Height="514" Margin="970,43,0,0" VerticalAlignment="Top" Width="0" SelectionChanged="historyListView_SelectionChanged" >
             <ListView.View>
                 <GridView>
                     <GridViewColumn/>
@@ -104,24 +104,33 @@
                 <StatusBarItem x:Name="kinectStatusBarItem" Content="" Height="34" Margin="0,2,0,3" Width="170" />
             </StatusBar>
         </Grid>
-        <Grid HorizontalAlignment="Left" Height="152" Margin="650,408,0,0" VerticalAlignment="Top" Width="185">
+        <Grid HorizontalAlignment="Left" Height="159" Margin="650,408,0,0" VerticalAlignment="Top" Width="185">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
-            <Button x:Name="hipFlexionButton" Content="Hip Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90"/>
-            <Button x:Name="kickingstraightButton" Content="Kicking Straight" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,24,0,0"/>
-            <Button x:Name="heelRaiseButton" Content="Heel Raise" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,48,0,0"/>
-            <Button x:Name="toeRaiseButton" Content="Toe Raise" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,72,0,0"/>
-            <Button x:Name="hipAbductionButton" Content="Hip Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,91,0,0"/>
-            <Button x:Name="elbowFlexionButton" Content="Elbow Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,0,0,0"/>
-            <Button x:Name="shoulderFlexionButton" Content="Shoulder Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,24,0,0"/>
-            <Button x:Name="shoulderAbductionButton" Content="Shoulder Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,48,0,0"/>
-            <Button x:Name="shoulderExtensionButton" Content="Shoulder Extension" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,72,0,0"/>
-            <Button x:Name="externalRotationButton" Content="External Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,91,0,0"/>
-            <Button x:Name="externalRotation90Button" Content="External Rotation at 90" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="0,115,0,0" Height="22"/>
-            <Button x:Name="internalRotation90Button" Content="Internal Rotation at 90" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="0,137,0,0"/>
+            <Button x:Name="hipFlexionButton" Content="Hip Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90"  Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="kickStraightButton" Content="Kick Straight" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,24,0,0" Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="heelRaiseButton" Content="Heel Raise" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,48,0,0" Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="toeRaiseButton" Content="Toe Raise" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,72,0,0"  Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="hipAbductionButton" Content="Hip Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="0,91,0,0"  Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="elbowFlexionButton" Content="Elbow Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,0,0,0" Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="shoulderFlexionButton" Content="Shoulder Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,24,0,0"  Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="shoulderAbductionButton" Content="Shoulder Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,48,0,0" Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="shoulderExtensionButton" Content="Shoulder Extension" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,72,0,0" Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="externalRotationButton" Content="External Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="90" Margin="95,91,0,0" Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="externalRotation90Button" Content="External Rotation at 90" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="0,115,0,0" Height="22" Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="internalRotation90Button" Content="Internal Rotation at 90" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="0,137,0,0" Click="RangeMotionModeButtonClicked"/>
         </Grid>
-        
+        <Grid x:Name="doctorSettingGrid" HorizontalAlignment="Left" Height="517" Margin="850,40,0,0" VerticalAlignment="Top" Width="115">
+            <Label x:Name="angleLimitLabel1" Content="角度限制1" HorizontalAlignment="Left" Margin="0,20,0,0" VerticalAlignment="Top" Width="75"/>
+            <TextBox x:Name="angleLimit1TextBox" HorizontalAlignment="Left" Height="23" Margin="0,45,0,0" TextWrapping="Wrap" Text="90" VerticalAlignment="Top" Width="115"/>
+            <Label x:Name="angleLimitLabel2" Content="角度限制2" HorizontalAlignment="Left" Margin="0,90,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="angleLimit2TextBox" HorizontalAlignment="Left" Height="23" Margin="0,115,0,0" TextWrapping="Wrap" Text="90" VerticalAlignment="Top" Width="115"/>
+            <Label x:Name="label4" Content="次數限制" HorizontalAlignment="Left" Margin="0,148,0,0" VerticalAlignment="Top"/>
+            <TextBox x:Name="NumberLimitTextBox" HorizontalAlignment="Left" Height="23" Margin="0,173,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="115"/>
+            <Button x:Name="doctorSettingEnterbutton" Content="確認" HorizontalAlignment="Left" Margin="0,215,0,0" VerticalAlignment="Top" Width="115" Click="doctorSettingEnterbutton_Click"/>
+        </Grid>
+
 
 
 
