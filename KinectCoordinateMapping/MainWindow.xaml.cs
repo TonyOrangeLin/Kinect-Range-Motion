@@ -1145,38 +1145,11 @@ namespace KinectCoordinateMapping
             DrawHistoryGroup();
             DrawCurrent();
             DrawManualMark();
+            DrawRangeMotion();
             //DrawOther();
         }
 
-        private void DrawRangeMotion()
-        {
-            if (motionMode == MotionMode.HipFlexion)
-            {
-                double LegAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
-                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                AddPixel.Text(point.X + 30, point.Y - 20, LegAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
 
-                Polygon myPolygon = new Polygon();
-                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
-                myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
-                myPolygon.StrokeThickness = 2;
-                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
-                myPolygon.VerticalAlignment = VerticalAlignment.Center;
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
-                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
-                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
-                PointCollection myPointCollection = new PointCollection();
-                myPointCollection.Add(Point1);
-                myPointCollection.Add(Point2);
-                myPointCollection.Add(Point3);
-                myPolygon.Points = myPointCollection;
-
-                canvas.Children.Add(myPolygon);
-            }
-        }
 
         public void ClearTargetList()
         {
@@ -1911,7 +1884,8 @@ namespace KinectCoordinateMapping
             cntemp = 0;
         }
 
-
+        private int angleLimit1 = 90;
+        private int angleLimit2 = 90;
         private void RangeMotionModeButtonClicked(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
@@ -1922,6 +1896,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "大腿與身體角度";
                 angleLimitLabel2.Content = "膝蓋角度";
                 cntemplimit = 4;
+                angleLimit2TextBox.IsEnabled = true;
+                angleLimitLabel2.IsEnabled = true;
             }
             if (btn.Content.ToString().Contains("Kick Straight"))
             {
@@ -1929,6 +1905,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "膝蓋角度";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 3;
+                angleLimit2TextBox.IsEnabled = false;
+                angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Heel Raise"))
             {
@@ -1936,6 +1914,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "腳跟角度";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 3;
+                angleLimit2TextBox.IsEnabled = false;
+                angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Toe Raise"))
             {
@@ -1943,6 +1923,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "腳跟角度";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 3;
+                angleLimit2TextBox.IsEnabled = false;
+                angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Hip Abduction"))
             {
@@ -1950,6 +1932,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "膝蓋角度";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 4;
+                angleLimit2TextBox.IsEnabled = false;
+                angleLimitLabel2.IsEnabled = false;
             }
             /*******************************************************/
             //手部
@@ -1958,19 +1942,29 @@ namespace KinectCoordinateMapping
             {
                 motionMode = MotionMode.ElbowFlexion;
                 cntemplimit = 3;
+                angleLimit2TextBox.IsEnabled = false;
+                angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Shoulder Flexion"))
             {
                 motionMode = MotionMode.ShoulderFlexion;
                 cntemplimit = 4;
+                angleLimit2TextBox.IsEnabled = false;
+                angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Shoulder Abduction"))
             {
                 motionMode = MotionMode.ShoulderAbduction;
+                cntemplimit = 3;
+                angleLimit2TextBox.IsEnabled = false;
+                angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Shoulder Extension"))
             {
                 motionMode = MotionMode.ShoulderExtension;
+                cntemplimit = 3;
+                angleLimit2TextBox.IsEnabled = false;
+                angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("External Rotation"))
             {
@@ -2147,11 +2141,335 @@ namespace KinectCoordinateMapping
                 }
             }
         }
-        private int angleLimit1 = 90;
-        private int angleLimit2 = 90;
+
         private void doctorSettingEnterbutton_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
+                angleLimit1 = Int32.Parse(angleLimit1TextBox.Text);
+            }
+            catch
+            {
 
+            }
+            try
+            {
+                angleLimit2 = Int32.Parse(angleLimit2TextBox.Text);
+            }
+            catch
+            {
+
+            }
+            FindTargetBall(motionMode, bodies);
+        }
+
+        private void DrawRangeMotion()
+        {
+            #region 腿部
+            if (motionMode == MotionMode.HipFlexion)
+            {
+                double LegAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                AddPixel.Text(point.X + 30, point.Y - 20, LegAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                Polygon myPolygon = new Polygon();
+                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
+                if (LegAngle > angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
+                }
+                else if (LegAngle < angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
+                }
+                myPolygon.StrokeThickness = 2;
+                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
+                PointCollection myPointCollection = new PointCollection();
+                myPointCollection.Add(Point1);
+                myPointCollection.Add(Point2);
+                myPointCollection.Add(Point3);
+                myPolygon.Points = myPointCollection;
+
+                canvas.Children.Add(myPolygon);
+
+                double HipAngle = AngleCal.AngleBetween(TargetList[1], TargetList[2], TargetList[3]);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                AddPixel.Text(point.X + 30, point.Y - 20, HipAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                myPolygon = new Polygon();
+                myPolygon.Stroke = Brushes.Black;
+                if (LegAngle > angleLimit2)
+                {
+                    myPolygon.Fill = Brushes.Red;
+                }
+                else if (LegAngle < angleLimit2)
+                {
+                    myPolygon.Fill = Brushes.LightSeaGreen;
+                }
+                myPolygon.StrokeThickness = 2;
+                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                Point1 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                Point3 = new System.Windows.Point(point.X, point.Y);
+                myPointCollection = new PointCollection();
+                myPointCollection.Add(Point1);
+                myPointCollection.Add(Point2);
+                myPointCollection.Add(Point3);
+                myPolygon.Points = myPointCollection;
+
+                canvas.Children.Add(myPolygon);
+            }
+            if (motionMode == MotionMode.KickStraight)
+            {
+                double LegAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                AddPixel.Text(point.X + 30, point.Y - 20, LegAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                Polygon myPolygon = new Polygon();
+                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
+                if (LegAngle > angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
+                }
+                else if (LegAngle < angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
+                }
+                myPolygon.StrokeThickness = 2;
+                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
+                PointCollection myPointCollection = new PointCollection();
+                myPointCollection.Add(Point1);
+                myPointCollection.Add(Point2);
+                myPointCollection.Add(Point3);
+                myPolygon.Points = myPointCollection;
+
+                canvas.Children.Add(myPolygon);
+            }
+            if (motionMode == MotionMode.ToeRaise)
+            {
+                double LegAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                AddPixel.Text(point.X + 30, point.Y - 20, LegAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                Polygon myPolygon = new Polygon();
+                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
+                if (LegAngle > angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
+                }
+                else if (LegAngle < angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
+                }
+                myPolygon.StrokeThickness = 2;
+                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
+                PointCollection myPointCollection = new PointCollection();
+                myPointCollection.Add(Point1);
+                myPointCollection.Add(Point2);
+                myPointCollection.Add(Point3);
+                myPolygon.Points = myPointCollection;
+
+                canvas.Children.Add(myPolygon);
+            }
+            if (motionMode == MotionMode.HeelRaise)
+            {
+                double LegAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                AddPixel.Text(point.X + 30, point.Y - 20, LegAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                Polygon myPolygon = new Polygon();
+                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
+                if (LegAngle > angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
+                }
+                else if ( LegAngle < angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
+                }
+                myPolygon.StrokeThickness = 2;
+                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
+                PointCollection myPointCollection = new PointCollection();
+                myPointCollection.Add(Point1);
+                myPointCollection.Add(Point2);
+                myPointCollection.Add(Point3);
+                myPolygon.Points = myPointCollection;
+
+                canvas.Children.Add(myPolygon);
+            }
+            if (motionMode == MotionMode.HipAbduction)
+            {
+
+            }
+            #endregion
+
+            #region 手部
+            if (motionMode == MotionMode.ElbowFlexion)
+            {
+                double elbowAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                AddPixel.Text(point.X + 30, point.Y - 20, elbowAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                Polygon myPolygon = new Polygon();
+                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
+                if (elbowAngle > angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
+                }
+                else if (elbowAngle < angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
+                }
+                myPolygon.StrokeThickness = 2;
+                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
+                PointCollection myPointCollection = new PointCollection();
+                myPointCollection.Add(Point1);
+                myPointCollection.Add(Point2);
+                myPointCollection.Add(Point3);
+                myPolygon.Points = myPointCollection;
+
+                canvas.Children.Add(myPolygon);
+            }
+            if (motionMode == MotionMode.ShoulderFlexion)
+            {
+                double elbowAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                AddPixel.Text(point.X + 30, point.Y - 20, elbowAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                Polygon myPolygon = new Polygon();
+                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
+                if (elbowAngle > angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
+                }
+                else if (elbowAngle < angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
+                }
+                myPolygon.StrokeThickness = 2;
+                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
+                PointCollection myPointCollection = new PointCollection();
+                myPointCollection.Add(Point1);
+                myPointCollection.Add(Point2);
+                myPointCollection.Add(Point3);
+                myPolygon.Points = myPointCollection;
+
+                canvas.Children.Add(myPolygon);
+            }
+            if (motionMode == MotionMode.ShoulderAbduction)
+            {
+                double elbowAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                AddPixel.Text(point.X + 30, point.Y - 20, elbowAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                Polygon myPolygon = new Polygon();
+                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
+                if (elbowAngle > angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
+                }
+                else if (elbowAngle < angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
+                }
+                myPolygon.StrokeThickness = 2;
+                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
+                PointCollection myPointCollection = new PointCollection();
+                myPointCollection.Add(Point1);
+                myPointCollection.Add(Point2);
+                myPointCollection.Add(Point3);
+                myPolygon.Points = myPointCollection;
+
+                canvas.Children.Add(myPolygon);
+            }
+            if (motionMode == MotionMode.ShoulderExtension)
+            {
+                double elbowAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                AddPixel.Text(point.X + 30, point.Y - 20, elbowAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                Polygon myPolygon = new Polygon();
+                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
+                if (elbowAngle > angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
+                }
+                else if (elbowAngle < angleLimit1)
+                {
+                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
+                }
+                myPolygon.StrokeThickness = 2;
+                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
+                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
+                PointCollection myPointCollection = new PointCollection();
+                myPointCollection.Add(Point1);
+                myPointCollection.Add(Point2);
+                myPointCollection.Add(Point3);
+                myPolygon.Points = myPointCollection;
+
+                canvas.Children.Add(myPolygon);
+            }
+
+            #endregion
         }
     }
 }

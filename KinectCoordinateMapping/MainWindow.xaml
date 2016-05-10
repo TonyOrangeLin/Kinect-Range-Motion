@@ -122,7 +122,7 @@
             <Button x:Name="internalRotation90Button" Content="Internal Rotation at 90" HorizontalAlignment="Left" VerticalAlignment="Top" Width="185" Margin="0,137,0,0" Click="RangeMotionModeButtonClicked"/>
         </Grid>
         <Grid x:Name="doctorSettingGrid" HorizontalAlignment="Left" Height="517" Margin="850,40,0,0" VerticalAlignment="Top" Width="115">
-            <Label x:Name="angleLimitLabel1" Content="角度限制1" HorizontalAlignment="Left" Margin="0,20,0,0" VerticalAlignment="Top" Width="75"/>
+            <Label x:Name="angleLimitLabel1" Content="角度限制1" HorizontalAlignment="Left" Margin="0,20,0,0" VerticalAlignment="Top" Width="115"/>
             <TextBox x:Name="angleLimit1TextBox" HorizontalAlignment="Left" Height="23" Margin="0,45,0,0" TextWrapping="Wrap" Text="90" VerticalAlignment="Top" Width="115"/>
             <Label x:Name="angleLimitLabel2" Content="角度限制2" HorizontalAlignment="Left" Margin="0,90,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="angleLimit2TextBox" HorizontalAlignment="Left" Height="23" Margin="0,115,0,0" TextWrapping="Wrap" Text="90" VerticalAlignment="Top" Width="115"/>
