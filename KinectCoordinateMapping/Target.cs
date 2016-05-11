@@ -122,14 +122,14 @@ namespace KinectCoordinateMapping
                 //{
                 //    steadyCounter = 0;
                 //}
-                SearchRange = 40;
+                SearchRange = 60;
                 TrackState = true;
                 findPointCounter = 0;
             }
             else
             {
                 TrackState = false;
-                SearchRange = 60;
+                SearchRange = 80;
                 findPointCounter++;
                 if (findPointCounter > 4)
                 {

@@ -1751,6 +1751,7 @@ namespace KinectCoordinateMapping
         {
             //Screenshot();
         }
+        
         private void saveDataButton_Click(object sender, RoutedEventArgs e)
         {
             if (replayFrame != null)
@@ -1907,6 +1908,9 @@ namespace KinectCoordinateMapping
 
         }
 
+
+        #region RangeMotion
+    
         private int angleLimit1 = 90;
         private int angleLimit2 = 90;
         private void RangeMotionModeButtonClicked(object sender, RoutedEventArgs e)
@@ -1975,7 +1979,7 @@ namespace KinectCoordinateMapping
                 motionMode = MotionMode.ShoulderFlexion;
                 angleLimitLabel1.Content = "肩膀";
                 angleLimitLabel2.Content = "無";
-                cntemplimit = 4;
+                cntemplimit = 3;
                 angleLimit2TextBox.IsEnabled = false;
                 angleLimitLabel2.IsEnabled = false;
             }
@@ -2157,7 +2161,7 @@ namespace KinectCoordinateMapping
                     {
                         if (!TargetList[0].IsTracked())
                         {
-                            Joint tempJoint = body.Joints[JointType.FootRight];
+                            Joint tempJoint = body.Joints[JointType.FootLeft];
                             ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
                             colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
                             colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
@@ -2165,7 +2169,7 @@ namespace KinectCoordinateMapping
                         }
                         if (!TargetList[1].IsTracked())
                         {
-                            Joint tempJoint = body.Joints[JointType.AnkleRight];
+                            Joint tempJoint = body.Joints[JointType.KneeLeft];
                             ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
                             colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
                             colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
@@ -2173,17 +2177,166 @@ namespace KinectCoordinateMapping
                         }
                         if (!TargetList[2].IsTracked())
                         {
-                            Joint tempJoint = body.Joints[JointType.KneeRight];
+                            Joint tempJoint = body.Joints[JointType.FootRight];
                             ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
                             colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
                             colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
                             TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
                         }
-
+                        if (!TargetList[3].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.KneeRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[3].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
                     }
                     /*******************************************************/
                     //手部
                     /******************************************************/
+                    if (motionMode == MotionMode.ElbowFlexion)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.HandRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[1].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.ElbowRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[1].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[2].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.ShoulderRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                    }
+                    if (motionMode == MotionMode.ShoulderFlexion)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.ElbowRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[1].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.ShoulderRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[1].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[2].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.HipRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                    }
+                    if (motionMode == MotionMode.ShoulderAbduction)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.ElbowRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[1].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.ShoulderRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[1].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[2].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.HipRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                    }
+                    if (motionMode == MotionMode.ShoulderExtension)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.ElbowRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[1].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.ShoulderRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[1].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                        if (!TargetList[2].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.HipRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                    }
+
+                    else if (motionMode == MotionMode.ExternalRotation)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.HandTipRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                    }
+                    else if (motionMode == MotionMode.ExternalRotation90)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.HandTipRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                    }
+                    else if (motionMode == MotionMode.InternalRotation)
+                    {
+                        if (!TargetList[0].IsTracked())
+                        {
+                            Joint tempJoint = body.Joints[JointType.HandTipRight];
+                            ColorSpacePoint colorPoint = coordinateMapper.MapCameraPointToColorSpace(tempJoint.Position);
+                            colorPoint.X = float.IsInfinity(colorPoint.X) ? 0 : colorPoint.X;
+                            colorPoint.Y = float.IsInfinity(colorPoint.Y) ? 0 : colorPoint.Y;
+                            TargetList[0].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
+                        }
+                    }
                 }
             }
         }
@@ -2216,7 +2369,7 @@ namespace KinectCoordinateMapping
             {
                 double LegAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
                 Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                AddPixel.Text(point.X + 30, point.Y - 20, LegAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+                AddPixel.Text(point.X - 60, point.Y + 20, LegAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
 
                 Brush brush = Brushes.Transparent;
                 if (LegAngle > angleLimit1)
@@ -2235,11 +2388,11 @@ namespace KinectCoordinateMapping
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
                 Point Point3 = new Point(point.X, point.Y);
 
-                AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point3.X + Point3.X) / 2, (int)(Point3.Y + Point3.Y) / 2, brush, canvas);
+                AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point2.X + Point3.X) / 2, (int)(Point2.Y + Point3.Y) / 2, brush, canvas);
 
                 
                 double HipAngle = AngleCal.AngleBetween(TargetList[1], TargetList[2], TargetList[3]);
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
                 AddPixel.Text(point.X + 30, point.Y - 20, HipAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
 
                 
@@ -2252,13 +2405,13 @@ namespace KinectCoordinateMapping
                     brush = Brushes.LightSeaGreen;
                 }
 
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
-                Point1 = new System.Windows.Point(point.X, point.Y);
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                Point2 = new System.Windows.Point(point.X, point.Y);
+                Point1 = new System.Windows.Point(point.X, point.Y);
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                Point2 = new System.Windows.Point(point.X, point.Y);
+                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[3].point2D().X, (int)TargetList[3].point2D().Y, zoomStruct);
                 Point3 = new System.Windows.Point(point.X, point.Y);
-                AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point3.X + Point3.X) / 2, (int)(Point3.Y + Point3.Y) / 2, brush, canvas);
+                AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point2.X + Point3.X) / 2, (int)(Point2.Y + Point3.Y) / 2, brush, canvas);
 
             }
             else if (motionMode == MotionMode.ToeRaise || motionMode == MotionMode.HeelRaise || motionMode == MotionMode.KickStraight)
@@ -2284,161 +2437,63 @@ namespace KinectCoordinateMapping
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
                 Point Point3 = new Point(point.X, point.Y);
 
-                AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point3.X + Point3.X) / 2, (int)(Point3.Y + Point3.Y) / 2, brush, canvas);
-            }
-            if (motionMode == MotionMode.HipAbduction)
-            {
+                AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point2.X + Point3.X) / 2, (int)(Point2.Y + Point3.Y) / 2, brush, canvas);
 
+            }
+            else if (motionMode == MotionMode.HipAbduction)
+            {
+                double leftAngle = AngleCal.Ver(TargetList[0], TargetList[1]);
+                double rightAngle = AngleCal.Ver(TargetList[2], TargetList[3]);
             }
             #endregion
 
             #region 手部
-            else if (motionMode == MotionMode.ElbowFlexion)
+            else if (motionMode == MotionMode.ElbowFlexion || motionMode == MotionMode.ShoulderFlexion || motionMode == MotionMode.ShoulderAbduction || motionMode == MotionMode.ShoulderExtension)
             {
-                double elbowAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                double LegAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
                 Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                AddPixel.Text(point.X + 30, point.Y - 20, elbowAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+                AddPixel.Text(point.X + 30, point.Y - 20, LegAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
 
-                Polygon myPolygon = new Polygon();
-                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
-                if (elbowAngle > angleLimit1)
+                Brush brush = Brushes.Transparent;
+                if (LegAngle > angleLimit1)
                 {
-                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
+                    brush = Brushes.Red;
                 }
-                else if (elbowAngle < angleLimit1)
+                else if (LegAngle < angleLimit1)
                 {
-                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
+                    brush = Brushes.LightSeaGreen;
                 }
-                myPolygon.StrokeThickness = 2;
-                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
-                myPolygon.VerticalAlignment = VerticalAlignment.Center;
+
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
-                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
+                Point Point1 = new Point(point.X, point.Y);
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+                Point Point2 = new Point(point.X, point.Y);
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
-                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
-                PointCollection myPointCollection = new PointCollection();
-                myPointCollection.Add(Point1);
-                myPointCollection.Add(Point2);
-                myPointCollection.Add(Point3);
-                myPolygon.Points = myPointCollection;
+                Point Point3 = new Point(point.X, point.Y);
 
-                canvas.Children.Add(myPolygon);
-            }
-            if (motionMode == MotionMode.ShoulderFlexion)
-            {
-                double elbowAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
-                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                AddPixel.Text(point.X + 30, point.Y - 20, elbowAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+                AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point2.X + Point3.X) / 2, (int)(Point2.Y + Point3.Y) / 2, brush, canvas);
 
-                Polygon myPolygon = new Polygon();
-                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
-                if (elbowAngle > angleLimit1)
-                {
-                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
-                }
-                else if (elbowAngle < angleLimit1)
-                {
-                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
-                }
-                myPolygon.StrokeThickness = 2;
-                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
-                myPolygon.VerticalAlignment = VerticalAlignment.Center;
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
-                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
+
+                double HipAngle = AngleCal.AngleBetween(TargetList[1], TargetList[2], TargetList[3]);
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
-                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
-                PointCollection myPointCollection = new PointCollection();
-                myPointCollection.Add(Point1);
-                myPointCollection.Add(Point2);
-                myPointCollection.Add(Point3);
-                myPolygon.Points = myPointCollection;
-
-                canvas.Children.Add(myPolygon);
+                AddPixel.Text(point.X + 30, point.Y - 20, HipAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
             }
-            if (motionMode == MotionMode.ShoulderAbduction)
-            {
-                double elbowAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
-                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                AddPixel.Text(point.X + 30, point.Y - 20, elbowAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
-
-                Polygon myPolygon = new Polygon();
-                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
-                if (elbowAngle > angleLimit1)
-                {
-                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
-                }
-                else if (elbowAngle < angleLimit1)
-                {
-                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
-                }
-                myPolygon.StrokeThickness = 2;
-                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
-                myPolygon.VerticalAlignment = VerticalAlignment.Center;
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
-                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
-                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
-                PointCollection myPointCollection = new PointCollection();
-                myPointCollection.Add(Point1);
-                myPointCollection.Add(Point2);
-                myPointCollection.Add(Point3);
-                myPolygon.Points = myPointCollection;
-
-                canvas.Children.Add(myPolygon);
-            }
-            if (motionMode == MotionMode.ShoulderExtension)
-            {
-                double elbowAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
-                Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                AddPixel.Text(point.X + 30, point.Y - 20, elbowAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
-
-                Polygon myPolygon = new Polygon();
-                myPolygon.Stroke = System.Windows.Media.Brushes.Black;
-                if (elbowAngle > angleLimit1)
-                {
-                    myPolygon.Fill = System.Windows.Media.Brushes.Red;
-                }
-                else if (elbowAngle < angleLimit1)
-                {
-                    myPolygon.Fill = System.Windows.Media.Brushes.LightSeaGreen;
-                }
-                myPolygon.StrokeThickness = 2;
-                myPolygon.HorizontalAlignment = HorizontalAlignment.Left;
-                myPolygon.VerticalAlignment = VerticalAlignment.Center;
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
-                System.Windows.Point Point1 = new System.Windows.Point(point.X, point.Y);
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                System.Windows.Point Point2 = new System.Windows.Point(point.X, point.Y);
-                point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
-                System.Windows.Point Point3 = new System.Windows.Point(point.X, point.Y);
-                PointCollection myPointCollection = new PointCollection();
-                myPointCollection.Add(Point1);
-                myPointCollection.Add(Point2);
-                myPointCollection.Add(Point3);
-                myPolygon.Points = myPointCollection;
-
-                canvas.Children.Add(myPolygon);
-            }
-            if (motionMode == MotionMode.ExternalRotation)
+            else if (motionMode == MotionMode.ExternalRotation)
             {
 
             }
-            if (motionMode == MotionMode.ExternalRotation90)
+            else if (motionMode == MotionMode.ExternalRotation90)
             {
 
             }
-            if (motionMode == MotionMode.InternalRotation)
+            else if (motionMode == MotionMode.InternalRotation)
             {
 
             }
 
             #endregion
         }
+
+        #endregion
     }
 }
