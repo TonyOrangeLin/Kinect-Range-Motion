@@ -22,8 +22,10 @@ namespace KinectCoordinateMapping
         public bool TrackState = false;
         double UU, VV, AverageUU, AverageVV, CenterUU, CenterVV;// KinectHeight = 0.88;  //x, y, z, this uv,average uv, center uv
 
-        int uvRange = 10, SearchRange = 40, CenterUVrange = 10;
+        int uvRange = 20, SearchRange = 40, CenterUVrange = 10;
 
+        public int SearchRangeNotTrack = 40;
+        public int SearchRangeTrack = 60;
         Point ColorCenter = new Point(0, 0);
         private List<double> xray = new List<double>() { };
         private List<double> yoyo = new List<double>() { };
@@ -72,30 +74,37 @@ namespace KinectCoordinateMapping
             {
                 for (int j = (int)ColorCenter.Y - SearchRange; j < ColorCenter.Y + SearchRange; j++)
                 {
-                    if (i <= 0 || i >= 1920 || j <= 0 || j >= 1080) break;   //avoid edge prob.
-
-                    int di = (i + j * 1920);   //di = depthpixel index                 
-                    int ci = di * 4;          //ci = colorPixel index
-
-                    UU = -0.169 * colorPixels[ci + 2] - 0.331 * colorPixels[ci + 1] + 0.5 * colorPixels[ci] + 128;
-                    VV = 0.5 * colorPixels[ci + 2] - 0.419 * colorPixels[ci + 1] - 0.081 * colorPixels[ci] + 128;
-
-                    //float depthZ = ColorInSkel[di].Z;
-                    if (UU > AverageUU - uvRange && UU < AverageUU + uvRange
-                     && VV > AverageVV - uvRange && VV < AverageVV + uvRange
-                     && UU > CenterUU - CenterUVrange && UU < CenterUU + CenterUVrange
-                     && VV > CenterVV - CenterUVrange && VV < CenterVV + CenterUVrange
-                     && (boolpixel[di] == 0 || boolpixel[di] == TargetID))
-                     //&& depthZ > expectZ - 0.25f && depthZ < expectZ + 0.25f)
+                    if (i <= 0 || i >= 1920 || j <= 0 || j >= 1080)
                     {
-                        boolpixel[di] = TargetID;
-                        uuSum += (int)UU;
-                        vvSum += (int)VV;
-                        ColorCenterXsum += i;
-                        ColorCenterYsum += j;
-                        Cnt++;                  //顏色追蹤歸顏色追蹤，Z值追蹤歸Z值追蹤 ；即使zCnt值不夠，UV值、中心點仍繼續更新
+
                     }
-                    else boolpixel[di] = 0;
+                    else
+                    {
+                        //break;   //avoid edge prob.
+
+                        int di = (i + j * 1920);   //di = depthpixel index                 
+                        int ci = di * 4;          //ci = colorPixel index
+
+                        UU = -0.169 * colorPixels[ci + 2] - 0.331 * colorPixels[ci + 1] + 0.5 * colorPixels[ci] + 128;
+                        VV = 0.5 * colorPixels[ci + 2] - 0.419 * colorPixels[ci + 1] - 0.081 * colorPixels[ci] + 128;
+
+                        //float depthZ = ColorInSkel[di].Z;
+                        if (UU > AverageUU - uvRange && UU < AverageUU + uvRange
+                         && VV > AverageVV - uvRange && VV < AverageVV + uvRange
+                         && UU > CenterUU - CenterUVrange && UU < CenterUU + CenterUVrange
+                         && VV > CenterVV - CenterUVrange && VV < CenterVV + CenterUVrange)
+                         //&& (boolpixel[di] == 0 || boolpixel[di] == TargetID))
+                        //&& depthZ > expectZ - 0.25f && depthZ < expectZ + 0.25f)
+                        {
+                            boolpixel[di] = TargetID;
+                            uuSum += (int)UU;
+                            vvSum += (int)VV;
+                            ColorCenterXsum += i;
+                            ColorCenterYsum += j;
+                            Cnt++;                  //顏色追蹤歸顏色追蹤，Z值追蹤歸Z值追蹤 ；即使zCnt值不夠，UV值、中心點仍繼續更新
+                        }
+                        else boolpixel[di] = 0;
+                    }
                 }
             }
 
@@ -107,7 +116,7 @@ namespace KinectCoordinateMapping
                 
                 ColorCenter.X = ColorCenterXsum / Cnt;
                 ColorCenter.Y = ColorCenterYsum / Cnt;
-                
+
                 //if( Math.Sqrt(Math.Pow((previousCenter.X - ColorCenter.X), 2) + Math.Pow((previousCenter.Y - ColorCenter.Y), 2)) < 4.5) //確認球中心是否飄移
                 //{
                 //    //要記錄點
@@ -122,14 +131,14 @@ namespace KinectCoordinateMapping
                 //{
                 //    steadyCounter = 0;
                 //}
-                SearchRange = 60;
+                SearchRange = SearchRangeTrack;
                 TrackState = true;
                 findPointCounter = 0;
             }
             else
             {
                 TrackState = false;
-                SearchRange = 80;
+                SearchRange = SearchRangeNotTrack;
                 findPointCounter++;
                 if (findPointCounter > 4)
                 {
@@ -368,6 +377,21 @@ namespace KinectCoordinateMapping
                 markBase = new BallMark();
                 markBase.Draw(canvas, displayStruct, this, zoomStruct);
             }
+
+            Ellipse ellipse = new Ellipse
+            {
+                Fill = Brushes.Blue,
+                Width = SearchRange/3 * 2,
+                Height = SearchRange / 3 * 2
+            };
+            Point tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)point2D().X, (int)point2D().Y, zoomStruct);
+            int transformX = (int)tempPoint.X;
+            int transformY = (int)tempPoint.Y;
+
+            Canvas.SetLeft(ellipse, transformX - ellipse.Width / 2);
+            Canvas.SetTop(ellipse, transformY - ellipse.Height / 2);
+            canvas.Children.Add(ellipse);
+
             if (isDisplayCoord)
             {
                 DrawCoordinate(canvas, zoomStruct);

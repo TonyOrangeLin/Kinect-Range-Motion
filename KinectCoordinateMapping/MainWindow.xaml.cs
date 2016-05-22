@@ -910,28 +910,19 @@ namespace KinectCoordinateMapping
                         {
                             ColorInSkeleton = ColorToSkeleton(depthPixels);  //ColorPoint to SkeletonPoint  必須每個frame都作!!
 
-                            for (int i = 0; i < TargetList.Count; i++)
-                            {
-                                TargetList[i].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
-                            }
-                            //frameStorage.ColorInSkeleton = ColorInSkeleton;
-                            //for (int i = 0; i < modeCommnad.TargetList.Count; i++)
-                            //{
-                            //    modeCommnad.TargetList[i].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
-                            //}
-                            //for (int i = 0; i < manualMarkList.Count; i++)
-                            //{
-                            //    manualMarkList[i].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
-                            //}
-                            //for (int i = 0; i < groupList.Count; i++)
-                            //{
-                            //    for (int j = 0; j < groupList[i].groupList.Count; j++)
-                            //    {
-                            //        groupList[i].groupList[j].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
-                            //    }
-                            //    groupList[i].Calculate();
-                            //}
+                            
+
+                            
+
                             frameskipcount = 0;
+                        }
+                        for (int i = 0; i < TargetList.Count; i++)
+                        {
+                            TargetList[i].RefreshTarget(ColorInSkeleton, isZoomIn, zoomOffsetX, zoomOffestY, zoomStruct);
+                        }
+                        for (int i = 0; i < TargetList.Count; i++)
+                        {
+                            TargetList[i].Cal(colorPixels, ColorInSkeleton, boolPixels);
                         }
                         frameskipcount++;
                     }
@@ -1011,6 +1002,7 @@ namespace KinectCoordinateMapping
                             }
                         }
 
+
                     }
                 }
                 using (BodyIndexFrame frame = reference.BodyIndexFrameReference.AcquireFrame())
@@ -1027,10 +1019,7 @@ namespace KinectCoordinateMapping
                     }
                 }
 
-                for (int i = 0; i < TargetList.Count; i++)
-                {
-                    TargetList[i].Cal(colorPixels, ColorInSkeleton, boolPixels);
-                }
+                
             }
             else
             {
@@ -1053,42 +1042,43 @@ namespace KinectCoordinateMapping
             }
             Calculate();
 
-            
 
-            
-            //if (drawCoolDown >= 3)
+
+            //drawCoolDown--;
+            //if (drawCoolDown <= 0)
             //{
                 Draw();
-
-            //Ellipse ellipse = new Ellipse
-            //{
-            //    Fill = Brushes.Red,
-            //    Width = 100,
-            //    Height = 100,
-            //};
-            //Canvas.SetLeft(ellipse, 100);
-            //Canvas.SetTop(ellipse, 100);
-            //canvas.Children.Add(ellipse);
-            //AddPixel.DrawCurve(50, 50, 200, 200, Brushes.Blue, canvas);
-            //AddPixel.DrawCurve(200 + 200, 100 + 200, 10 + 200, 20 + 200, Brushes.Green, canvas);
-
-            //pfC.Add()
-            //ellipse = new Ellipse
-            //{
-            //    Fill = Brushes.Black,
-            //    Width = 100,
-            //    Height = 100,
-            //};
-            //Canvas.SetLeft(ellipse, 80);
-            //Canvas.SetTop(ellipse, 80);
-            //canvas.Children.Add(ellipse);
-            //    drawCoolDown = 0;
+            //    drawCoolDown = 3;
             //}
-            //else
-            //{
-            //    drawCoolDown++;
-            //}
-        }
+                //Ellipse ellipse = new Ellipse
+                //{
+                //    Fill = Brushes.Red,
+                //    Width = 100,
+                //    Height = 100,
+                //};
+                //Canvas.SetLeft(ellipse, 100);
+                //Canvas.SetTop(ellipse, 100);
+                //canvas.Children.Add(ellipse);
+                //AddPixel.DrawCurve(50, 50, 200, 200, Brushes.Blue, canvas);
+                //AddPixel.DrawCurve(200 + 200, 100 + 200, 10 + 200, 20 + 200, Brushes.Green, canvas);
+
+                //pfC.Add()
+                //ellipse = new Ellipse
+                //{
+                //    Fill = Brushes.Black,
+                //    Width = 100,
+                //    Height = 100,
+                //};
+                //Canvas.SetLeft(ellipse, 80);
+                //Canvas.SetTop(ellipse, 80);
+                //canvas.Children.Add(ellipse);
+                //    drawCoolDown = 0;
+                //}
+                //else
+                //{
+                //    drawCoolDown++;
+                //}
+            }
 
         
         private bool isInfinity(CameraSpacePoint input)
@@ -1531,8 +1521,31 @@ namespace KinectCoordinateMapping
 
 
             CatchSuccess = 0;
+            if (cntemp == 0)
+            {
+                TargetList[cntemp].Setting(x, y, default2UU, default2VV);
+                TargetList[cntemp].SearchRangeTrack = 80;
+                TargetList[cntemp].SearchRangeNotTrack = 160;
+            }
+            if (cntemp == 1)
+            {
+                TargetList[cntemp].Setting(x, y, default2UU, default2VV);
+                TargetList[cntemp].SearchRangeTrack = 20;
+                TargetList[cntemp].SearchRangeNotTrack = 40;
+            }
+            if (cntemp == 2)
+            {
+                TargetList[cntemp].Setting(x, y, default2UU, default2VV);
+                TargetList[cntemp].SearchRangeTrack = 20;
+                TargetList[cntemp].SearchRangeNotTrack = 40;
+            }
+            if (cntemp == 3)
+            {
+                TargetList[cntemp].Setting(x, y, default1UU, default1VV);
+                TargetList[cntemp].SearchRangeTrack = 40;
+                TargetList[cntemp].SearchRangeNotTrack = 80;
+            }
             
-            TargetList[cntemp].Setting(x, y, UU, VV);
             cntemp++;
             if (cntemp >= cntemplimit)
             {
@@ -1898,6 +1911,7 @@ namespace KinectCoordinateMapping
             //target.Setting(0, 0, default2UU, default2VV);//yellow
             //manualMarkList.Add(target);
             //TargetList = new List<Target>();
+            TargetList = new List<Target>();
             for (int t = 0; t <= NumbersOfTarget; t++)
             {
                 Target target2 = new Target(t);
@@ -2074,7 +2088,7 @@ namespace KinectCoordinateMapping
                             TargetList[3].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
                         }
                     }
-                    if (motionmode == MotionMode.KickStraight)
+                    else if (motionmode == MotionMode.KickStraight)
                     {
                         if (!TargetList[0].IsTracked())
                         {
@@ -2102,7 +2116,7 @@ namespace KinectCoordinateMapping
                         }
                        
                     }
-                    if (motionmode == MotionMode.HeelRaise)
+                    else if (motionmode == MotionMode.HeelRaise)
                     {
                         if (!TargetList[0].IsTracked())
                         {
@@ -2129,7 +2143,7 @@ namespace KinectCoordinateMapping
                             TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
                         }
                     }
-                    if (motionmode == MotionMode.ToeRaise)
+                    else if (motionmode == MotionMode.ToeRaise)
                     {
                         if (!TargetList[0].IsTracked())
                         {
@@ -2157,7 +2171,7 @@ namespace KinectCoordinateMapping
                         }
 
                     }
-                    if (motionmode == MotionMode.HipAbduction)
+                    else if (motionmode == MotionMode.HipAbduction)
                     {
                         if (!TargetList[0].IsTracked())
                         {
@@ -2195,7 +2209,7 @@ namespace KinectCoordinateMapping
                     /*******************************************************/
                     //手部
                     /******************************************************/
-                    if (motionMode == MotionMode.ElbowFlexion)
+                    else if (motionMode == MotionMode.ElbowFlexion)
                     {
                         if (!TargetList[0].IsTracked())
                         {
@@ -2222,7 +2236,7 @@ namespace KinectCoordinateMapping
                             TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
                         }
                     }
-                    if (motionMode == MotionMode.ShoulderFlexion)
+                    else if (motionMode == MotionMode.ShoulderFlexion)
                     {
                         if (!TargetList[0].IsTracked())
                         {
@@ -2249,7 +2263,7 @@ namespace KinectCoordinateMapping
                             TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
                         }
                     }
-                    if (motionMode == MotionMode.ShoulderAbduction)
+                    else if (motionMode == MotionMode.ShoulderAbduction)
                     {
                         if (!TargetList[0].IsTracked())
                         {
@@ -2276,7 +2290,7 @@ namespace KinectCoordinateMapping
                             TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
                         }
                     }
-                    if (motionMode == MotionMode.ShoulderExtension)
+                    else if (motionMode == MotionMode.ShoulderExtension)
                     {
                         if (!TargetList[0].IsTracked())
                         {
@@ -2303,7 +2317,6 @@ namespace KinectCoordinateMapping
                             TargetList[2].Setting((int)colorPoint.X, (int)colorPoint.Y, 78, 125);
                         }
                     }
-
                     else if (motionMode == MotionMode.ExternalRotation)
                     {
                         if (!TargetList[0].IsTracked())
