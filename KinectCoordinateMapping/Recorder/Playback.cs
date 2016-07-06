@@ -111,7 +111,7 @@ namespace KinectCoordinateMapping.Recorder
             // Create the playback object
             playback = client.CreatePlayback(filePath);
 
-            playback.LoopCount = 1;
+            playback.LoopCount = 5;
             
             //playback.StepOnce();
             playback.Start();

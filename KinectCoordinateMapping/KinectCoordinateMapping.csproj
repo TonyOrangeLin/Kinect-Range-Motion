@@ -94,6 +94,7 @@
     <Compile Include="ButtonCommand\ZoomInCommand.cs" />
     <Compile Include="ButtonCommand\ZoomOutCommand.cs" />
     <Compile Include="CoordinateTransform.cs" />
+    <Compile Include="CsvExport.cs" />
     <Compile Include="FileSave.cs" />
     <Compile Include="FrameStore\FrameStorage.cs" />
     <Compile Include="FrameStore\FrameStorageFusion.cs" />

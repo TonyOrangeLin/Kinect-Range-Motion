@@ -367,6 +367,20 @@ namespace KinectCoordinateMapping
 
         public void Draw(Canvas canvas, DisplayStruct displayStruct, ZoomStruct zoomStruct, bool isDisplayCoord)
         {
+            Ellipse ellipse = new Ellipse
+            {
+                Fill = Brushes.Beige,
+                Width = SearchRange / 3 * 2,
+                Height = SearchRange / 3 * 2
+            };
+            Point tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)point2D().X, (int)point2D().Y, zoomStruct);
+            int transformX = (int)tempPoint.X;
+            int transformY = (int)tempPoint.Y;
+
+            Canvas.SetLeft(ellipse, transformX - ellipse.Width / 2);
+            Canvas.SetTop(ellipse, transformY - ellipse.Height / 2);
+            canvas.Children.Add(ellipse);
+
             if (displayStruct.isDotDisplay)
             {
                 markBase = new DotMark();
@@ -378,19 +392,7 @@ namespace KinectCoordinateMapping
                 markBase.Draw(canvas, displayStruct, this, zoomStruct);
             }
 
-            Ellipse ellipse = new Ellipse
-            {
-                Fill = Brushes.Blue,
-                Width = SearchRange/3 * 2,
-                Height = SearchRange / 3 * 2
-            };
-            Point tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)point2D().X, (int)point2D().Y, zoomStruct);
-            int transformX = (int)tempPoint.X;
-            int transformY = (int)tempPoint.Y;
-
-            Canvas.SetLeft(ellipse, transformX - ellipse.Width / 2);
-            Canvas.SetTop(ellipse, transformY - ellipse.Height / 2);
-            canvas.Children.Add(ellipse);
+            
 
             if (isDisplayCoord)
             {

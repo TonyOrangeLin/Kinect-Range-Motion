@@ -1513,7 +1513,7 @@ namespace KinectCoordinateMapping
 
             double UU = -0.169 * colorPixels[ci + 2] - 0.331 * colorPixels[ci + 1] + 0.5 * colorPixels[ci] + 128;
             double VV = 0.5 * colorPixels[ci + 2] - 0.419 * colorPixels[ci + 1] - 0.081 * colorPixels[ci] + 128;
-            //System.Diagnostics.Debug.WriteLine(UU.ToString() + ", " + VV.ToString());
+            System.Diagnostics.Debug.WriteLine(UU.ToString() + ", " + VV.ToString());
 
             setOneColorButton.Background = new SolidColorBrush(Color.FromRgb(colorPixels[ci + 2], colorPixels[ci + 1], colorPixels[ci]));
             //default1UU = (int)UU;
@@ -1524,26 +1524,53 @@ namespace KinectCoordinateMapping
             if (cntemp == 0)
             {
                 TargetList[cntemp].Setting(x, y, default2UU, default2VV);
-                TargetList[cntemp].SearchRangeTrack = 80;
-                TargetList[cntemp].SearchRangeNotTrack = 160;
+                TargetList[cntemp].SearchRangeTrack = 50;
+                TargetList[cntemp].SearchRangeNotTrack = 100;
+                //TargetList[cntemp].SearchRangeTrack = 30;
+                //TargetList[cntemp].SearchRangeNotTrack = 60;
+                if (motionMode == MotionMode.ToeRaise)
+                {
+                    TargetList[cntemp].SearchRangeTrack = 30;
+                    TargetList[cntemp].SearchRangeNotTrack = 60;
+                }
+                if (motionMode == MotionMode.HeelRaise)
+                {
+                    TargetList[cntemp].SearchRangeTrack = 20;
+                    TargetList[cntemp].SearchRangeNotTrack = 40;
+                }
             }
             if (cntemp == 1)
             {
                 TargetList[cntemp].Setting(x, y, default2UU, default2VV);
                 TargetList[cntemp].SearchRangeTrack = 20;
                 TargetList[cntemp].SearchRangeNotTrack = 40;
+                if (motionMode == MotionMode.ToeRaise)
+                {
+                    TargetList[cntemp].SearchRangeTrack = 20;
+                    TargetList[cntemp].SearchRangeNotTrack = 40;
+                }
+                if (motionMode == MotionMode.HeelRaise)
+                {
+                    TargetList[cntemp].SearchRangeTrack = 30;
+                    TargetList[cntemp].SearchRangeNotTrack = 60;
+                }
             }
             if (cntemp == 2)
             {
                 TargetList[cntemp].Setting(x, y, default2UU, default2VV);
                 TargetList[cntemp].SearchRangeTrack = 20;
                 TargetList[cntemp].SearchRangeNotTrack = 40;
+                if (motionMode == MotionMode.HipFlexion)
+                {
+                    TargetList[cntemp].SearchRangeTrack = 80;
+                    TargetList[cntemp].SearchRangeNotTrack = 60;
+                }
             }
             if (cntemp == 3)
             {
-                TargetList[cntemp].Setting(x, y, default1UU, default1VV);
-                TargetList[cntemp].SearchRangeTrack = 40;
-                TargetList[cntemp].SearchRangeNotTrack = 80;
+                TargetList[cntemp].Setting(x, y, default2UU, default2VV);
+                TargetList[cntemp].SearchRangeTrack = 20;
+                TargetList[cntemp].SearchRangeNotTrack = 40;
             }
             
             cntemp++;
@@ -2017,28 +2044,28 @@ namespace KinectCoordinateMapping
             }
             if (btn.Content.ToString().Contains("External Rotation"))
             {
-                motionMode = MotionMode.ExternalRotation;
-                angleLimitLabel1.Content = "肩膀";
-                angleLimitLabel2.Content = "無";
-                cntemplimit = 3;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //motionMode = MotionMode.ExternalRotation;
+                //angleLimitLabel1.Content = "肩膀";
+                //angleLimitLabel2.Content = "無";
+                //cntemplimit = 3;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
-            if (btn.Content.ToString().Contains("External Rotation at 90"))
+            if (btn.Content.ToString().Contains("External Rotation"))
             {
                 motionMode = MotionMode.ExternalRotation90;
                 angleLimitLabel1.Content = "肩膀";
                 angleLimitLabel2.Content = "無";
-                cntemplimit = 3;
+                cntemplimit = 2;
                 angleLimit2TextBox.IsEnabled = false;
                 angleLimitLabel2.IsEnabled = false;
             }
-            if (btn.Content.ToString().Contains("Internal Rotation at 90"))
+            if (btn.Content.ToString().Contains("Internal Rotation"))
             {
                 motionMode = MotionMode.InternalRotation;
                 angleLimitLabel1.Content = "肩膀";
                 angleLimitLabel2.Content = "無";
-                cntemplimit = 3;
+                cntemplimit = 2;
                 angleLimit2TextBox.IsEnabled = false;
                 angleLimitLabel2.IsEnabled = false;
             }
@@ -2375,6 +2402,51 @@ namespace KinectCoordinateMapping
             FindTargetBall(motionMode, bodies);
         }
 
+        private void WriteCSV(double input)
+        {
+            CsvExport export = new CsvExport();
+
+            
+            if (double.IsNaN(input))
+            {
+
+            }
+            else
+            {
+                export.AddRow();
+                if (isOverLimit)
+                {
+                    export["Angle"] = 0;
+                    export["AlarmAngle"] = input.ToString("f3");
+                    export["alarm"] = 1;
+                }
+                else
+                {
+                    export["Angle"] = input.ToString("f3");
+                    export["AlarmAngle"] = 0;
+                    export["alarm"] = 0;
+                }
+            }
+            //export["expect"] = csvtextBox.Text.ToString();
+            string myCsv = export.Export();
+            export.AppendToFile("Test.csv");
+            byte[] myCsvData = export.ExportToBytes();
+        }
+
+        private void WriteCSV(double left, double right)
+        {
+            CsvExport export = new CsvExport();
+
+            export.AddRow();
+
+            export["Angle L"] = left.ToString("f3");
+            export["Angle R"] = right.ToString("f3");
+            //export["expect"] = csvtextBox.Text.ToString();
+            //string myCsv = export.Export();
+            //export.AppendToFile("Test.csv");
+            //byte[] myCsvData = export.ExportToBytes();
+        }
+        bool isOverLimit = false;
         private void DrawRangeMotion()
         {
             #region 腿部
@@ -2419,11 +2491,11 @@ namespace KinectCoordinateMapping
                 }
 
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
-                Point1 = new System.Windows.Point(point.X, point.Y);
+                Point1 = new Point(point.X, point.Y);
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
-                Point2 = new System.Windows.Point(point.X, point.Y);
+                Point2 = new Point(point.X, point.Y);
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[3].point2D().X, (int)TargetList[3].point2D().Y, zoomStruct);
-                Point3 = new System.Windows.Point(point.X, point.Y);
+                Point3 = new Point(point.X, point.Y);
                 AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point2.X + Point3.X) / 2, (int)(Point2.Y + Point3.Y) / 2, brush, canvas);
 
             }
@@ -2437,10 +2509,12 @@ namespace KinectCoordinateMapping
                 if (LegAngle > angleLimit1)
                 {
                     brush = Brushes.Red;
+                    isOverLimit = true;
                 }
                 else if (LegAngle < angleLimit1)
                 {
                     brush = Brushes.LightSeaGreen;
+                    isOverLimit = false ;
                 }
 
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
@@ -2452,11 +2526,52 @@ namespace KinectCoordinateMapping
 
                 AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point2.X + Point3.X) / 2, (int)(Point2.Y + Point3.Y) / 2, brush, canvas);
 
+                WriteCSV(LegAngle);
             }
             else if (motionMode == MotionMode.HipAbduction)
             {
                 double leftAngle = AngleCal.Ver(TargetList[0], TargetList[1]);
-                double rightAngle = AngleCal.Ver(TargetList[2], TargetList[3]);
+                double rightAngle = AngleCal.Ver(TargetList[3], TargetList[2]);
+
+                Point tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                int transformX = (int)tempPoint.X;
+                int transformY = (int)tempPoint.Y;
+
+                tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                int transformX2 = (int)tempPoint.X;
+                int transformY2 = (int)tempPoint.Y;
+
+                Line line = new Line();
+                line.X1 = transformX;
+                line.X2 = transformX2;
+                line.Y1 = transformY;
+                line.Y2 = transformY2;
+                line.Stroke = Brushes.DarkGoldenrod;
+                line.StrokeThickness = displayStruct.linesize;
+                canvas.Children.Add(line);
+
+                AddPixel.Text(transformX - 60, transformY - 20, leftAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+                tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+                transformX = (int)tempPoint.X;
+                transformY = (int)tempPoint.Y;
+
+                tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[3].point2D().X, (int)TargetList[3].point2D().Y, zoomStruct);
+                transformX2 = (int)tempPoint.X;
+                transformY2 = (int)tempPoint.Y;
+
+                line = new Line();
+                line.X1 = transformX;
+                line.X2 = transformX2;
+                line.Y1 = transformY;
+                line.Y2 = transformY2;
+                line.Stroke = Brushes.DarkGoldenrod;
+                line.StrokeThickness = displayStruct.linesize;
+                canvas.Children.Add(line);
+
+                
+                AddPixel.Text(transformX2 + 30, transformY2 - 20, rightAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+                WriteCSV(leftAngle, rightAngle);
             }
             #endregion
 
@@ -2490,23 +2605,48 @@ namespace KinectCoordinateMapping
                 double HipAngle = AngleCal.AngleBetween(TargetList[1], TargetList[2], TargetList[3]);
                 point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
                 AddPixel.Text(point.X + 30, point.Y - 20, HipAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+                WriteCSV(LegAngle);
             }
-            else if (motionMode == MotionMode.ExternalRotation)
+            else if (motionMode == MotionMode.ExternalRotation90 || motionMode == MotionMode.InternalRotation)
             {
+                double rotationAngle = AngleCal.Ver(TargetList[0], TargetList[1]);
 
-            }
-            else if (motionMode == MotionMode.ExternalRotation90)
-            {
+                Point tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                int transformX = (int)tempPoint.X;
+                int transformY = (int)tempPoint.Y;
 
-            }
-            else if (motionMode == MotionMode.InternalRotation)
-            {
+                tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                int transformX2 = (int)tempPoint.X;
+                int transformY2 = (int)tempPoint.Y;
 
+                Line line = new Line();
+                line.X1 = transformX;
+                line.X2 = transformX2;
+                line.Y1 = transformY;
+                line.Y2 = transformY2;
+                line.Stroke = Brushes.DarkGoldenrod;
+                line.StrokeThickness = displayStruct.linesize;
+                canvas.Children.Add(line);
+
+                AddPixel.Text(transformX - 60, transformY - 20, rotationAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+                WriteCSV(rotationAngle);
             }
+
 
             #endregion
         }
 
         #endregion
+
+        private void resetMarkbutton_Click(object sender, RoutedEventArgs e)
+        {
+            TargetList = new List<Target>();
+            for (int t = 0; t <= NumbersOfTarget; t++)
+            {
+                Target target2 = new Target(t);
+                TargetList.Add(target2);
+            }
+            cntemp = 0;
+        }
     }
 }
