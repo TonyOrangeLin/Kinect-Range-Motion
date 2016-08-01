@@ -115,11 +115,12 @@
             <Button x:Name="hipAbductionButton" Content="Hip Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="125" Margin="0,96,0,0"  Click="RangeMotionModeButtonClicked"/>
             <Button x:Name="elbowFlexionButton" Content="Elbow Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,0,0,0" Click="RangeMotionModeButtonClicked"/>
             <Button x:Name="shoulderFlexionButton"  Visibility="Hidden" Content="Shoulder Flexion" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,24,0,0"  Click="RangeMotionModeButtonClicked"/>
-            <Button x:Name="shoulderAbductionButton" Content="Shoulder Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,48,0,0" Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="shoulderAbductionButton" Content="Shoulder Abduction" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,43,0,0" Click="RangeMotionModeButtonClicked"/>
             <Button x:Name="shoulderExtensionButton" Content="Shoulder Extension" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,72,0,0" Click="RangeMotionModeButtonClicked"/>
             <Button x:Name="externalRotation90Button" Content="External Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,96,0,0" Height="22" Click="RangeMotionModeButtonClicked"/>
-            <Button x:Name="internalRotation90Button" Content="Internal Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,123,0,0" Click="RangeMotionModeButtonClicked"/>
+            <Button x:Name="internalRotation90Button" Content="Internal Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,118,0,0" Click="RangeMotionModeButtonClicked"/>
             <Button x:Name="resetMarkbutton" Content="mark重設" HorizontalAlignment="Left" Margin="0,120,0,0" VerticalAlignment="Top" Width="125" Click="resetMarkbutton_Click"/>
+            <Button x:Name="internalRotation90Button_Copy" Content="180 - Internal Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,140,0,0" Click="RangeMotionModeButtonClicked"/>
         </Grid>
         <Grid x:Name="doctorSettingGrid" HorizontalAlignment="Left" Height="363" Margin="850,40,0,0" VerticalAlignment="Top" Width="115">
             <Label x:Name="angleLimitLabel1" Content="角度限制" HorizontalAlignment="Left" Margin="0,85,0,0" VerticalAlignment="Top" Width="115"/>

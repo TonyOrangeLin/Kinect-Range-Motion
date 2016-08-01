@@ -1524,7 +1524,7 @@ namespace KinectCoordinateMapping
             if (cntemp == 0)
             {
                 TargetList[cntemp].Setting(x, y, default2UU, default2VV);
-                TargetList[cntemp].SearchRangeTrack = 50;
+                TargetList[cntemp].SearchRangeTrack = 30;
                 TargetList[cntemp].SearchRangeNotTrack = 100;
                 //TargetList[cntemp].SearchRangeTrack = 30;
                 //TargetList[cntemp].SearchRangeNotTrack = 60;
@@ -2607,10 +2607,34 @@ namespace KinectCoordinateMapping
                 AddPixel.Text(point.X + 30, point.Y - 20, HipAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
                 WriteCSV(LegAngle);
             }
-            else if (motionMode == MotionMode.ExternalRotation90 || motionMode == MotionMode.InternalRotation)
+            else if (motionMode == MotionMode.ExternalRotation90)
             {
                 double rotationAngle = AngleCal.Ver(TargetList[0], TargetList[1]);
 
+                Point tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+                int transformX = (int)tempPoint.X;
+                int transformY = (int)tempPoint.Y;
+
+                tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+                int transformX2 = (int)tempPoint.X;
+                int transformY2 = (int)tempPoint.Y;
+
+                Line line = new Line();
+                line.X1 = transformX;
+                line.X2 = transformX2;
+                line.Y1 = transformY;
+                line.Y2 = transformY2;
+                line.Stroke = Brushes.DarkGoldenrod;
+                line.StrokeThickness = displayStruct.linesize;
+                canvas.Children.Add(line);
+
+                AddPixel.Text(transformX - 60, transformY - 20, rotationAngle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+                WriteCSV(rotationAngle);
+            }
+            else if (motionMode == MotionMode.InternalRotation)
+            {
+                double rotationAngle = AngleCal.Ver(TargetList[0], TargetList[1]);
+                rotationAngle = 180 - rotationAngle;
                 Point tempPoint = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
                 int transformX = (int)tempPoint.X;
                 int transformY = (int)tempPoint.Y;

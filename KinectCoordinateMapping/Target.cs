@@ -22,7 +22,7 @@ namespace KinectCoordinateMapping
         public bool TrackState = false;
         double UU, VV, AverageUU, AverageVV, CenterUU, CenterVV;// KinectHeight = 0.88;  //x, y, z, this uv,average uv, center uv
 
-        int uvRange = 20, SearchRange = 40, CenterUVrange = 10;
+        int uvRange = 20, SearchRange = 40, CenterUVrange = 20;
 
         public int SearchRangeNotTrack = 40;
         public int SearchRangeTrack = 60;
