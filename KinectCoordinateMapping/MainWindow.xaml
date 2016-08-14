@@ -122,7 +122,7 @@
             <Button x:Name="resetMarkbutton" Content="mark重設" HorizontalAlignment="Left" Margin="0,120,0,0" VerticalAlignment="Top" Width="125" Click="resetMarkbutton_Click"/>
             <Button x:Name="internalRotation90Button_Copy" Content="180 - Internal Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,140,0,0" Click="RangeMotionModeButtonClicked"/>
         </Grid>
-        <Grid x:Name="doctorSettingGrid" HorizontalAlignment="Left" Height="363" Margin="850,40,0,0" VerticalAlignment="Top" Width="115">
+        <Grid x:Name="doctorSettingGrid" HorizontalAlignment="Left" Height="285" Margin="850,10,0,0" VerticalAlignment="Top" Width="115">
             <Label x:Name="angleLimitLabel1" Content="角度限制" HorizontalAlignment="Left" Margin="0,85,0,0" VerticalAlignment="Top" Width="115"/>
             <TextBox x:Name="angleLimit1TextBox" HorizontalAlignment="Left" Height="23" Margin="0,115,0,0" TextWrapping="Wrap" Text="90" VerticalAlignment="Top" Width="115"/>
             <Label x:Name="angleLimitLabel2" Content="角度限制2" HorizontalAlignment="Left" Margin="0,90,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
@@ -130,6 +130,12 @@
             <Label x:Name="label4" Content="次數限制" HorizontalAlignment="Left" Margin="0,148,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="NumberLimitTextBox" HorizontalAlignment="Left" Height="23" Margin="0,173,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="115"/>
             <Button x:Name="doctorSettingEnterbutton" Content="確認" HorizontalAlignment="Left" Margin="0,215,0,0" VerticalAlignment="Top" Width="115" Click="doctorSettingEnterbutton_Click"/>
+        </Grid>
+        <Grid HorizontalAlignment="Left" Height="100" Margin="850,303,0,0" VerticalAlignment="Top" Width="133">
+            <Button x:Name="kneeFlexionExtensionButton" Content="Flexion / Extension" HorizontalAlignment="Left" Margin="15,10,0,0" VerticalAlignment="Top" Width="108" Click="kneeFlexionExtensionButton_Click"/>
+            <Button x:Name="shoulderFlexionButton2" Content="Shoulder Flexion" Margin="15,34,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="108" Click="shoulderFlexionButton2_Click"/>
+            <Button x:Name="shoulderAbductionButton2" Content="Shoulder Abduction" HorizontalAlignment="Left" Margin="15,58,0,0" VerticalAlignment="Top" Width="108" Click="shoulderAbductionButton2_Click"/>
+            <Button x:Name="hipKneeFlexionButton" Content="Hip / Knee Flexion" HorizontalAlignment="Left" Margin="15,82,0,0" VerticalAlignment="Top" Width="108" Click="hipKneeFlexionButton_Click"/>
         </Grid>
 
 
