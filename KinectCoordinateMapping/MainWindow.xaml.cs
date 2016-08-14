@@ -30,6 +30,7 @@ using KinectCoordinateMapping.ProfileDocument;
 using System.Runtime.Serialization;
 using Microsoft.Win32;
 using System.Drawing.Drawing2D;
+using static KinectCoordinateMapping.SettingParameter;
 
 namespace KinectCoordinateMapping
 {
@@ -39,8 +40,11 @@ namespace KinectCoordinateMapping
     /// 
     public enum mode {None, AngleMode, LenghtMode, PlaneMode, LineBisection, ZoomIn, ZoomOut, Drag};
     public enum MotionMode {None, HipFlexion, KickStraight, HeelRaise, ToeRaise, HipAbduction, ElbowFlexion, ShoulderFlexion, ShoulderAbduction, ShoulderExtension, ExternalRotation, ExternalRotation90, InternalRotation };
+
+   
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        AROMmode aromMode = AROMmode.None;
         int cntemplimit = 4;
         private KinectSensor _sensor;
         private MultiSourceFrameReader _reader;
@@ -1048,6 +1052,7 @@ namespace KinectCoordinateMapping
             //if (drawCoolDown <= 0)
             //{
                 Draw();
+            CalculateAROM();
             //    drawCoolDown = 3;
             //}
                 //Ellipse ellipse = new Ellipse
@@ -2383,23 +2388,23 @@ namespace KinectCoordinateMapping
 
         private void doctorSettingEnterbutton_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                angleLimit1 = Int32.Parse(angleLimit1TextBox.Text);
-            }
-            catch
-            {
+            //try
+            //{
+            //    angleLimit1 = Int32.Parse(angleLimit1TextBox.Text);
+            //}
+            //catch
+            //{
 
-            }
-            try
-            {
-                angleLimit2 = Int32.Parse(angleLimit2TextBox.Text);
-            }
-            catch
-            {
+            //}
+            //try
+            //{
+            //    angleLimit2 = Int32.Parse(angleLimit2TextBox.Text);
+            //}
+            //catch
+            //{
 
-            }
-            FindTargetBall(motionMode, bodies);
+            //}
+            //FindTargetBall(motionMode, bodies);
         }
 
         private void WriteCSV(double input)
@@ -2446,7 +2451,67 @@ namespace KinectCoordinateMapping
             //export.AppendToFile("Test.csv");
             //byte[] myCsvData = export.ExportToBytes();
         }
+
+        SettingParameter settingParameter = new SettingParameter();
         bool isOverLimit = false;
+        private void DrawAROM(double angle, bool isOverLimit)
+        {
+            Point point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+            AddPixel.Text(point.X - 60, point.Y + 20, angle.ToString("f3"), Color.FromRgb(255, 0, 0), canvas);
+
+            Brush brush = Brushes.Transparent;
+            if (isOverLimit)
+            {
+                brush = Brushes.Red;
+            }
+            else
+            {
+                brush = Brushes.LightSeaGreen;
+            }
+
+            point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[0].point2D().X, (int)TargetList[0].point2D().Y, zoomStruct);
+            Point Point1 = new Point(point.X, point.Y);
+            point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[1].point2D().X, (int)TargetList[1].point2D().Y, zoomStruct);
+            Point Point2 = new Point(point.X, point.Y);
+            point = CoordinateTransform.ReverseFromFullScreenToScreen((int)TargetList[2].point2D().X, (int)TargetList[2].point2D().Y, zoomStruct);
+            Point Point3 = new Point(point.X, point.Y);
+
+            AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point2.X + Point3.X) / 2, (int)(Point2.Y + Point3.Y) / 2, brush, canvas);
+        }
+        private void CalculateAROM()
+        {
+            if (aromMode != AROMmode.None)
+            {
+                bool isOverLimit = false;
+                double resultAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+
+                if (resultAngle < settingParameter.AROMAngle)
+                {
+                    warninglabel.Content = "請繼續執行";
+                }
+                else if (resultAngle > settingParameter.AROMAngle - 10 && resultAngle < settingParameter.AROMAngle)
+                {
+                    warninglabel.Content = "OK";
+                }
+                else if (resultAngle > settingParameter.AROMAngle)
+                {
+                    warninglabel.Content = "警告：超過AROM值";
+                    isOverLimit = true;
+                }
+                if (resultAngle > settingParameter.PROMAngle)
+                {
+                    promwarninglabel.Content = "警告：超過PROM值";
+                    isOverLimit = true;
+                }
+                else
+                {
+                    promwarninglabel.Content = "";
+                }
+                DrawAROM(resultAngle, isOverLimit);
+            }
+
+            
+        }
         private void DrawRangeMotion()
         {
             #region 腿部
@@ -2675,24 +2740,27 @@ namespace KinectCoordinateMapping
 
         private void kneeFlexionExtensionButton_Click(object sender, RoutedEventArgs e)
         {
-
+            aromMode = AROMmode.KneeExtensionFlexion;
+            cntemplimit = 3;
         }
 
         private void shoulderFlexionButton2_Click(object sender, RoutedEventArgs e)
         {
-
+            aromMode = AROMmode.ShoulderFlexion;
+            cntemplimit = 3;
         }
 
-        
-
+       
         private void shoulderAbductionButton2_Click(object sender, RoutedEventArgs e)
         {
-
+            aromMode = AROMmode.ShoulderAbduction;
+            cntemplimit = 3;
         }
 
         private void hipKneeFlexionButton_Click(object sender, RoutedEventArgs e)
         {
-
+            aromMode = AROMmode.HipKneeFlexion;
+            cntemplimit = 3;
         }
     }
 }
