@@ -125,6 +125,7 @@
     <Compile Include="ReplayPage.xaml.cs">
       <DependentUpon>ReplayPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="SettingParameter.cs" />
     <Compile Include="Target.cs" />
     <Compile Include="Utilities\ColorExtensions.cs" />
     <Compile Include="Utilities\Constants.cs" />

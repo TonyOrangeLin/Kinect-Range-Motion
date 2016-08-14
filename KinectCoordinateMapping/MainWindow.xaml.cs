@@ -2673,15 +2673,17 @@ namespace KinectCoordinateMapping
             cntemp = 0;
         }
 
+        private void kneeFlexionExtensionButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
         private void shoulderFlexionButton2_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void kneeFlexionExtensionButton_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+        
 
         private void shoulderAbductionButton2_Click(object sender, RoutedEventArgs e)
         {
