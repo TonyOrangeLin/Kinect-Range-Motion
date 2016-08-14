@@ -230,7 +230,7 @@ namespace KinectCoordinateMapping
             if (settingParameter.isNearAppointPoint)
             {
                 settingParameter.nearAppointPointCount++;
-
+                settingParameter.timeInApointRange++;
             }
             else
             {
@@ -2397,6 +2397,8 @@ namespace KinectCoordinateMapping
 
         private void doctorSettingEnterbutton_Click(object sender, RoutedEventArgs e)
         {
+            MakeExcel makeExcel = new MakeExcel();
+            makeExcel.StartExcel();
             //try
             //{
             //    angleLimit1 = Int32.Parse(angleLimit1TextBox.Text);
@@ -2501,6 +2503,7 @@ namespace KinectCoordinateMapping
                 {
                     settingParameter.AROMAngle = result;
                     promwarninglabel.Content = "AROM角度為" + result.ToString("f3") + "度";
+                    angleLimit2TextBox.Text = result.ToString("f3");
                 }
             }
         }
@@ -2515,8 +2518,13 @@ namespace KinectCoordinateMapping
 
                     if (resultAngle < settingParameter.AROMAngle)
                     {
+                        if (settingParameter.isNearAppointPoint)
+                        {
+                            //算一次
+                        }
                         warninglabel.Content = "請繼續執行";
                         settingParameter.isNearAppointPoint = false;
+                        
                     }
                     else if (resultAngle > settingParameter.AROMAngle - 10 && resultAngle < settingParameter.AROMAngle)
                     {

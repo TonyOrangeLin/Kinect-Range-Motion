@@ -139,8 +139,8 @@
             <Label x:Name="label4_Copy" Content="持續時間" HorizontalAlignment="Left" Margin="0,169,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="NumberLimitTextBox_Copy" HorizontalAlignment="Left" Height="23" Margin="0,199,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="96"/>
             <Label x:Name="angleLimitLabel1_Copy4" Content="秒" HorizontalAlignment="Left" Margin="96,199,0,0" VerticalAlignment="Top" Width="27"/>
-            <Label x:Name="warninglabel" Content="123" HorizontalAlignment="Left" Margin="0,245,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="36"/>
-            <Label x:Name="promwarninglabel" Content="123" HorizontalAlignment="Left" Margin="0,300,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="36"/>
+            <Label x:Name="warninglabel" Content="" HorizontalAlignment="Left" Margin="0,245,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="36"/>
+            <Label x:Name="promwarninglabel" Content="" HorizontalAlignment="Left" Margin="0,300,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="36"/>
         </Grid>
         <Grid HorizontalAlignment="Left" Height="72" Margin="320,408,0,0" VerticalAlignment="Top" Width="315">
             <Grid.Background>
