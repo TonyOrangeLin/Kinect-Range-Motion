@@ -100,6 +100,7 @@
     <Compile Include="FrameStore\FrameStorageFusion.cs" />
     <Compile Include="FrameStore\HintProcess.cs" />
     <Compile Include="FrameStore\TTSEngine.cs" />
+    <Compile Include="MakeExcel.cs" />
     <Compile Include="ProfileDocument\CalculateFrontResult.cs" />
     <Compile Include="ProgressSquencer\AnteriorHintSeq.cs" />
     <Compile Include="ProgressSquencer\HintSEQ.cs" />

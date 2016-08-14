@@ -146,10 +146,11 @@
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
-            <Button x:Name="kneeFlexionExtensionButton" Content="Flexion / Extension" HorizontalAlignment="Left" VerticalAlignment="Top" Width="133" Click="kneeFlexionExtensionButton_Click" Margin="10,15,0,0"/>
-            <Button x:Name="shoulderFlexionButton2" Content="Shoulder Flexion" Margin="10,47,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="133" Click="shoulderFlexionButton2_Click"/>
-            <Button x:Name="shoulderAbductionButton2" Content="Shoulder Abduction" HorizontalAlignment="Left" Margin="172,15,0,0" VerticalAlignment="Top" Width="133" Click="shoulderAbductionButton2_Click"/>
-            <Button x:Name="hipKneeFlexionButton" Content="Hip / Knee Flexion" HorizontalAlignment="Left" Margin="172,47,0,0" VerticalAlignment="Top" Width="133" Click="hipKneeFlexionButton_Click"/>
+            <Button x:Name="kneeFlexionExtensionButton" Content="Flexion / Extension" HorizontalAlignment="Left" VerticalAlignment="Top" Width="133" Click="kneeFlexionExtensionButton_Click" Margin="0,1,0,0"/>
+            <Button x:Name="shoulderFlexionButton2" Content="Shoulder Flexion" Margin="0,25,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Width="133" Click="shoulderFlexionButton2_Click"/>
+            <Button x:Name="shoulderAbductionButton2" Content="Shoulder Abduction" HorizontalAlignment="Left" Margin="138,1,0,0" VerticalAlignment="Top" Width="133" Click="shoulderAbductionButton2_Click"/>
+            <Button x:Name="hipKneeFlexionButton" Content="Hip / Knee Flexion" HorizontalAlignment="Left" Margin="138,25,0,0" VerticalAlignment="Top" Width="133" Click="hipKneeFlexionButton_Click"/>
+            <Button x:Name="aromSettingButton" Content="設定AROM" HorizontalAlignment="Left" Margin="0,49,0,0" VerticalAlignment="Top" Width="133" Click="aromSettingButton_Click"/>
         </Grid>
 
 

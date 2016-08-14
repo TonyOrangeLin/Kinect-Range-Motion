@@ -227,6 +227,15 @@ namespace KinectCoordinateMapping
 
         private void timer_Tick(object sender, EventArgs e)
         {
+            if (settingParameter.isNearAppointPoint)
+            {
+                settingParameter.nearAppointPointCount++;
+
+            }
+            else
+            {
+                settingParameter.nearAppointPointCount = 0;
+            }
             if (snapShotCoolDown > 0)
             {
                 snapShotCoolDown--;
@@ -2478,36 +2487,60 @@ namespace KinectCoordinateMapping
 
             AddPixel.DrawTriangle((int)(Point1.X + Point2.X) / 2, (int)(Point1.Y + Point2.Y) / 2, (int)Point2.X, (int)Point2.Y, (int)(Point2.X + Point3.X) / 2, (int)(Point2.Y + Point3.Y) / 2, brush, canvas);
         }
+
+        private void SetAROMLimit()
+        {
+            if (TargetList[0].IsTracked() || TargetList[1].IsTracked() || TargetList[2].IsTracked())
+            {
+                double result = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                if (double.IsNaN(result) || double.IsInfinity(result))
+                {
+
+                }
+                else
+                {
+                    settingParameter.AROMAngle = result;
+                    promwarninglabel.Content = "AROM角度為" + result.ToString("f3") + "度";
+                }
+            }
+        }
         private void CalculateAROM()
         {
             if (aromMode != AROMmode.None)
             {
-                bool isOverLimit = false;
-                double resultAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                if (TargetList[0].IsTracked() || TargetList[1].IsTracked() || TargetList[2].IsTracked())
+                {
+                    bool isOverLimit = false;
+                    double resultAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
 
-                if (resultAngle < settingParameter.AROMAngle)
-                {
-                    warninglabel.Content = "請繼續執行";
+                    if (resultAngle < settingParameter.AROMAngle)
+                    {
+                        warninglabel.Content = "請繼續執行";
+                        settingParameter.isNearAppointPoint = false;
+                    }
+                    else if (resultAngle > settingParameter.AROMAngle - 10 && resultAngle < settingParameter.AROMAngle)
+                    {
+                        warninglabel.Content = "OK";
+                        settingParameter.isNearAppointPoint = true;
+                    }
+                    else if (resultAngle > settingParameter.AROMAngle)
+                    {
+                        warninglabel.Content = "警告：超過AROM值";
+                        isOverLimit = true;
+                        settingParameter.isNearAppointPoint = false;
+                    }
+                    if (resultAngle > settingParameter.PROMAngle)
+                    {
+                        promwarninglabel.Content = "警告：超過PROM值";
+                        isOverLimit = true;
+                        settingParameter.isNearAppointPoint = false;
+                    }
+                    else
+                    {
+                        promwarninglabel.Content = "";
+                    }
+                    DrawAROM(resultAngle, isOverLimit);
                 }
-                else if (resultAngle > settingParameter.AROMAngle - 10 && resultAngle < settingParameter.AROMAngle)
-                {
-                    warninglabel.Content = "OK";
-                }
-                else if (resultAngle > settingParameter.AROMAngle)
-                {
-                    warninglabel.Content = "警告：超過AROM值";
-                    isOverLimit = true;
-                }
-                if (resultAngle > settingParameter.PROMAngle)
-                {
-                    promwarninglabel.Content = "警告：超過PROM值";
-                    isOverLimit = true;
-                }
-                else
-                {
-                    promwarninglabel.Content = "";
-                }
-                DrawAROM(resultAngle, isOverLimit);
             }
 
             
@@ -2761,6 +2794,11 @@ namespace KinectCoordinateMapping
         {
             aromMode = AROMmode.HipKneeFlexion;
             cntemplimit = 3;
+        }
+
+        private void aromSettingButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetAROMLimit();
         }
     }
 }
