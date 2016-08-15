@@ -1,7 +1,7 @@
 ﻿<Window x:Class="KinectCoordinateMapping.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="602" Width="993"
+        Title="Kinect AROM" Height="602" Width="993"
         Loaded="Window_Loaded" Closed="Window_Closed">
     <Grid HorizontalAlignment="Center" Width="993" Margin="-4,0" Height="567" VerticalAlignment="Top">
         <Grid  HorizontalAlignment="Center" Width="640" Height="360" VerticalAlignment="Top" Margin="170,43,183,0" >
@@ -103,10 +103,10 @@
             <StatusBar HorizontalAlignment="Stretch" x:Name="statusBar" Background="White" Margin="0,43,130,-10" Foreground="#FF423434" >
                 <StatusBarItem x:Name="kinectStatusBarItem" Content="" Height="34" Margin="0,2,0,3" Width="170" />
             </StatusBar>
-            <Label x:Name="label5" Content="起始角度" HorizontalAlignment="Left" Margin="110,2,0,0" VerticalAlignment="Top" Width="65"/>
-            <TextBox x:Name="startAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="175,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="65"/>
+            <Button x:Name="resetMarkbutton" Content="mark重設" HorizontalAlignment="Left" Margin="155,5,0,0" VerticalAlignment="Top" Width="75" Click="resetMarkbutton_Click"/>
+            <Button x:Name="createPieButton" Content="產生結果" HorizontalAlignment="Left" Margin="160,37,0,0" VerticalAlignment="Top" Width="75" Click="createPieButton_Click"/>
         </Grid>
-        <Grid HorizontalAlignment="Left" Height="159" Margin="695,408,0,0" VerticalAlignment="Top" Width="288">
+        <Grid HorizontalAlignment="Left" Height="159" Margin="695,408,0,0" VerticalAlignment="Top" Width="288" Visibility="Hidden">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
@@ -121,7 +121,7 @@
             <Button x:Name="shoulderExtensionButton" Content="Shoulder Extension" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,72,0,0" Click="RangeMotionModeButtonClicked"/>
             <Button x:Name="externalRotation90Button" Content="External Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,96,0,0" Height="22" Click="RangeMotionModeButtonClicked"/>
             <Button x:Name="internalRotation90Button" Content="Internal Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,118,0,0" Click="RangeMotionModeButtonClicked"/>
-            <Button x:Name="resetMarkbutton" Content="mark重設" HorizontalAlignment="Left" Margin="0,120,0,0" VerticalAlignment="Top" Width="125" Click="resetMarkbutton_Click"/>
+
             <Button x:Name="internalRotation90Button_Copy" Content="180 - Internal Rotation" HorizontalAlignment="Left" VerticalAlignment="Top" Width="140" Margin="150,140,0,0" Click="RangeMotionModeButtonClicked"/>
         </Grid>
         <Grid x:Name="doctorSettingGrid" HorizontalAlignment="Left" Height="393" Margin="850,10,0,0" VerticalAlignment="Top" Width="133">
@@ -144,7 +144,7 @@
             <Label x:Name="warninglabel" Content="" HorizontalAlignment="Left" Margin="0,255,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="16"/>
             <Label x:Name="promwarninglabel" Content="" HorizontalAlignment="Left" Margin="0,315,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="16"/>
         </Grid>
-        <Grid HorizontalAlignment="Left" Height="72" Margin="235,408,0,0" VerticalAlignment="Top" Width="455">
+        <Grid HorizontalAlignment="Left" Height="72" Margin="235,408,0,0" VerticalAlignment="Top" Width="540">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
@@ -159,6 +159,8 @@
             <Label x:Name="label3_Copy" Content="目前秒數" HorizontalAlignment="Left" Margin="276,43,0,0" VerticalAlignment="Top" Width="54"/>
             <TextBox x:Name="sucessTimeCountTextBox" HorizontalAlignment="Left" Height="23" Margin="335,48,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="65"/>
             <Button x:Name="startPointSettingButton" Content="設定起始位置" HorizontalAlignment="Left" Margin="138,49,0,0" VerticalAlignment="Top" Width="133" Click="startPointSettingButton_Click" />
+            <TextBox x:Name="startAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="465,1,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="65"/>
+            <Label x:Name="label5" Content="起始角度" HorizontalAlignment="Left" Margin="405,5,0,0" VerticalAlignment="Top" Width="65"/>
         </Grid>
         <TextBox x:Name="nowAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="570,410,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="65"/>
 

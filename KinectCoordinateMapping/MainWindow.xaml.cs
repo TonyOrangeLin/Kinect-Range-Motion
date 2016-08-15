@@ -1956,8 +1956,8 @@ namespace KinectCoordinateMapping
         private void doctorSettingEnterbutton_Click(object sender, RoutedEventArgs e)
         {
             
-            //MakeExcel makeExcel = new MakeExcel();
-            //makeExcel.StartExcel();
+            MakeExcel makeExcel = new MakeExcel();
+            makeExcel.StartExcel();
             try
             {
                 settingParameter.PROMAngle = Int32.Parse(PROMAngleTextBox.Text);
@@ -2123,11 +2123,11 @@ namespace KinectCoordinateMapping
                     sucessCountTextBox.Text = settingParameter.successCount.ToString();
                     if (resultAngle < settingParameter.AROMAngle - 10)
                     {
-                        if (settingParameter.isNearAppointPoint)
-                        {
-                            //算一次
-                            settingParameter.successCount++;
-                        }
+                        //if (settingParameter.isNearAppointPoint)
+                        //{
+                        //    //算一次
+                        //    settingParameter.successCount++;
+                        //}
                         warninglabel.Content = "請繼續執行";
                         settingParameter.isNearAppointPoint = false;
                         
@@ -2161,6 +2161,16 @@ namespace KinectCoordinateMapping
                     }
                     DrawAROM(resultAngle, isOverLimit);
                     sucessTimeCountTextBox.Text = settingParameter.nearAppointPointCount.ToString();
+                    SettingParameter tempSetting = new SettingParameter();
+                    if (double.IsNaN(resultAngle))
+                    {
+
+                    }
+                    else
+                    {
+                        tempSetting.nowAngle = resultAngle;
+                        settingParameterList.Add(tempSetting);
+                    }
                 }
             }
 
@@ -2168,6 +2178,7 @@ namespace KinectCoordinateMapping
         }
 
         bool canSucessBeCount = false;
+        List<SettingParameter> settingParameterList = new List<SettingParameter>();
         private void DrawRangeMotion()
         {
             #region 腿部
@@ -2427,6 +2438,12 @@ namespace KinectCoordinateMapping
         private void startPointSettingButton_Click(object sender, RoutedEventArgs e)
         {
             SetStartAngle();
+        }
+
+        private void createPieButton_Click(object sender, RoutedEventArgs e)
+        {
+            MakeExcel TEMP = new MakeExcel();
+            TEMP.MakeWave(settingParameterList);
         }
     }
 }
