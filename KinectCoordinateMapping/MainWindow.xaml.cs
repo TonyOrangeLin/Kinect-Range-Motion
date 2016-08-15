@@ -232,9 +232,18 @@ namespace KinectCoordinateMapping
             if (settingParameter.isNearAppointPoint)
             {
                 settingParameter.nearAppointPointCount++;
-                if (settingParameter.nearAppointPointCount > settingParameter.timeInApointRange)
+
+                
+                if (settingParameter.nearAppointPointCount > settingParameter.timeInApointRange && canSucessBeCount)
                 {
                     settingParameter.successCount++;
+                    canSucessBeCount = false;
+                    settingParameter.nearAppointPointCount = 0;
+                }
+                else if (settingParameter.nearAppointPointCount > settingParameter.timeInApointRange && !canSucessBeCount)
+                {
+                    settingParameter.nearAppointPointCount = 0;
+                    canSucessBeCount = false;
                 }
             }
             else
@@ -654,11 +663,6 @@ namespace KinectCoordinateMapping
             //{
             //    measuredLength = AngleCal.Length(modeCommnad.TargetList[0], modeCommnad.TargetList[1]);
             //}
-        }
-
-        public void RightMouseUp(int x, int y, int index)
-        {
-            //groupList.RemoveAt(index);
         }
 
         private void DrawHistoryGroup()
@@ -1532,8 +1536,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "大腿與身體角度";
                 angleLimitLabel2.Content = "膝蓋角度";
                 cntemplimit = 4;
-                angleLimit2TextBox.IsEnabled = true;
-                angleLimitLabel2.IsEnabled = true;
+                //angleLimit2TextBox.IsEnabled = true;
+                //angleLimitLabel2.IsEnabled = true;
             }
             if (btn.Content.ToString().Contains("Kick Straight"))
             {
@@ -1541,8 +1545,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "膝蓋角度";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 3;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Heel Raise"))
             {
@@ -1550,8 +1554,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "腳跟角度";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 3;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Toe Raise"))
             {
@@ -1559,8 +1563,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "腳跟角度";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 3;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Hip Abduction"))
             {
@@ -1568,8 +1572,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "膝蓋角度";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 4;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
             /*******************************************************/
             //手部
@@ -1580,8 +1584,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "手肘";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 3;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Shoulder Flexion"))
             {
@@ -1589,8 +1593,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "肩膀";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 3;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Shoulder Abduction"))
             {
@@ -1598,8 +1602,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "肩膀";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 3;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Shoulder Extension"))
             {
@@ -1607,8 +1611,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "肩膀";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 3;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("External Rotation"))
             {
@@ -1625,8 +1629,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "肩膀";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 2;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
             if (btn.Content.ToString().Contains("Internal Rotation"))
             {
@@ -1634,8 +1638,8 @@ namespace KinectCoordinateMapping
                 angleLimitLabel1.Content = "肩膀";
                 angleLimitLabel2.Content = "無";
                 cntemplimit = 2;
-                angleLimit2TextBox.IsEnabled = false;
-                angleLimitLabel2.IsEnabled = false;
+                //angleLimit2TextBox.IsEnabled = false;
+                //angleLimitLabel2.IsEnabled = false;
             }
         }
 
@@ -1951,24 +1955,49 @@ namespace KinectCoordinateMapping
 
         private void doctorSettingEnterbutton_Click(object sender, RoutedEventArgs e)
         {
+            
             //MakeExcel makeExcel = new MakeExcel();
             //makeExcel.StartExcel();
-            //try
-            //{
-            //    angleLimit1 = Int32.Parse(angleLimit1TextBox.Text);
-            //}
-            //catch
-            //{
+            try
+            {
+                settingParameter.PROMAngle = Int32.Parse(PROMAngleTextBox.Text);
+            }
+            catch
+            {
 
-            //}
-            //try
-            //{
-            //    angleLimit2 = Int32.Parse(angleLimit2TextBox.Text);
-            //}
-            //catch
-            //{
+            }
+            try
+            {
+                settingParameter.AROMAngle = double.Parse(AROMAngleTextBox.Text);
+            }
+            catch
+            {
 
-            //}
+            }
+            try
+            {
+                settingParameter.limitCount = Int32.Parse(NumberLimitTextBox.Text);
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                settingParameter.timeInApointRange = Int32.Parse(durationTextBox.Text);
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                settingParameter.startAngle = double.Parse(startAngleTextBox.Text);
+            }
+            catch
+            {
+
+            }
             //FindTargetBall(motionMode, bodies);
         }
 
@@ -2057,10 +2086,30 @@ namespace KinectCoordinateMapping
                 {
                     settingParameter.AROMAngle = result;
                     promwarninglabel.Content = "AROM角度為" + result.ToString("f3") + "度";
-                    angleLimit2TextBox.Text = result.ToString("f3");
+                    AROMAngleTextBox.Text = result.ToString("f3");
                 }
             }
         }
+
+        private void SetStartAngle()
+        {
+            if (TargetList[0].IsTracked() || TargetList[1].IsTracked() || TargetList[2].IsTracked())
+            {
+                double result = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                if (double.IsNaN(result) || double.IsInfinity(result))
+                {
+
+                }
+                else
+                {
+                    settingParameter.startAngle = result;
+                    promwarninglabel.Content = "起始角度為" + result.ToString("f3") + "度";
+                    startAngleTextBox.Text = result.ToString("f3");
+                }
+            }
+
+        }
+
         private void CalculateAROM()
         {
             if (aromMode != AROMmode.None)
@@ -2069,8 +2118,10 @@ namespace KinectCoordinateMapping
                 {
                     bool isOverLimit = false;
                     double resultAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
-
-                    if (resultAngle < settingParameter.AROMAngle)
+                    settingParameter.nowAngle = resultAngle;
+                    nowAngleTextBox.Text = settingParameter.nowAngle.ToString("f3");
+                    sucessCountTextBox.Text = settingParameter.successCount.ToString();
+                    if (resultAngle < settingParameter.AROMAngle - 10)
                     {
                         if (settingParameter.isNearAppointPoint)
                         {
@@ -2102,12 +2153,21 @@ namespace KinectCoordinateMapping
                     {
                         promwarninglabel.Content = "";
                     }
+
+                    if (resultAngle < settingParameter.startAngle + 10 && resultAngle > settingParameter.startAngle - 10)
+                    {
+                        warninglabel.Content = "正在起始位置";
+                        canSucessBeCount = true;
+                    }
                     DrawAROM(resultAngle, isOverLimit);
+                    sucessTimeCountTextBox.Text = settingParameter.nearAppointPointCount.ToString();
                 }
             }
 
             
         }
+
+        bool canSucessBeCount = false;
         private void DrawRangeMotion()
         {
             #region 腿部
@@ -2362,6 +2422,11 @@ namespace KinectCoordinateMapping
         private void aromSettingButton_Click(object sender, RoutedEventArgs e)
         {
             SetAROMLimit();
+        }
+
+        private void startPointSettingButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetStartAngle();
         }
     }
 }

@@ -25,6 +25,8 @@ namespace KinectCoordinateMapping
 
         public int totalCount { get; set; }
 
+        public int limitCount { get; set; }
+
         public bool isNearAppointPoint { get; set; } 
 
         public int nearAppointPointCount { get; set; }

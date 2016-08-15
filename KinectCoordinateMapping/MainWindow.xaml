@@ -9,14 +9,14 @@
             <Canvas Name="canvas" Height="360"  Width="640" MouseRightButtonUp="canvas_MouseRightButtonUp" MouseLeftButtonUp="canvas_MouseLeftButtonUp" MouseMove="canvas_MouseMove" MouseLeftButtonDown="canvas_MouseLeftButtonDown" MouseWheel="canvas_MouseWheel" HorizontalAlignment="Left" />
 
         </Grid>
-        <Grid x:Name="visionDetailGrid" HorizontalAlignment="Left" Height="72" VerticalAlignment="Top" Width="295" Margin="20,408,0,0">
+        <Grid x:Name="visionDetailGrid" HorizontalAlignment="Left" Height="72" VerticalAlignment="Top" Width="210" Margin="20,408,0,0">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
 
-            <Slider x:Name="ballSizeSlider" HorizontalAlignment="Left" Margin="135,10,0,0" VerticalAlignment="Top" Width="150" ValueChanged="ballSizeSlider_ValueChanged" Maximum="50" Height="18"/>
+            <Slider x:Name="ballSizeSlider" HorizontalAlignment="Left" Margin="135,10,0,0" VerticalAlignment="Top" Width="65" ValueChanged="ballSizeSlider_ValueChanged" Maximum="50" Height="18"/>
             <Label x:Name="label" Content="球大小" HorizontalAlignment="Left" Margin="84,7,0,0" VerticalAlignment="Top" Height="25" Width="46"/>
-            <Slider x:Name="lineSizeslider" HorizontalAlignment="Left" Margin="135,42,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.417,0.833" Width="150" ValueChanged="lineSizeslider_ValueChanged" Cursor="Arrow" Height="18"/>
+            <Slider x:Name="lineSizeslider" HorizontalAlignment="Left" Margin="135,42,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.417,0.833" Width="65" ValueChanged="lineSizeslider_ValueChanged" Cursor="Arrow" Height="18"/>
             <Label x:Name="label1" Content="線大小" HorizontalAlignment="Left" Margin="85,37,0,0" VerticalAlignment="Top" Height="25" Width="46"/>
             <Button x:Name="ballDisplayButton" Content="以球表示" HorizontalAlignment="Left" Margin="10,42,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="ballDisplayButton_Click" Background="White"/>
             <Button x:Name="dotDisplayButton" Content="以點表示" HorizontalAlignment="Left" Margin="9,10,0,0" VerticalAlignment="Top" Width="75" Height="20" Click="dotDisplayButton_Click" Background="White"/>
@@ -93,18 +93,20 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <Grid HorizontalAlignment="Left" Height="72" Margin="450,488,0,0" VerticalAlignment="Top" Width="195">
+        <Grid HorizontalAlignment="Left" Height="72" Margin="450,488,0,0" VerticalAlignment="Top" Width="240">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
             <Button x:Name="setOneColorButton" Content="設定一號顏色" HorizontalAlignment="Left" Margin="10,0,0,0" VerticalAlignment="Top" Width="85" Click="setOneColorButton_Click" Background="#FF86CF2E"/>
             <Button x:Name="setTwoColorButton" Content="設定二號顏色" HorizontalAlignment="Left" Margin="10,24,0,0" VerticalAlignment="Top" Width="85" Click="setTwoColorButton_Click" Background="#FFFFEB26"/>
             <Label x:Name="setColorHintLabel" Content="" HorizontalAlignment="Left" Margin="10,48,0,0" VerticalAlignment="Top" Width="110"/>
-            <StatusBar HorizontalAlignment="Stretch" x:Name="statusBar" Background="White" Margin="0,43,25,-10" Foreground="#FF423434" >
+            <StatusBar HorizontalAlignment="Stretch" x:Name="statusBar" Background="White" Margin="0,43,130,-10" Foreground="#FF423434" >
                 <StatusBarItem x:Name="kinectStatusBarItem" Content="" Height="34" Margin="0,2,0,3" Width="170" />
             </StatusBar>
+            <Label x:Name="label5" Content="起始角度" HorizontalAlignment="Left" Margin="110,2,0,0" VerticalAlignment="Top" Width="65"/>
+            <TextBox x:Name="startAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="175,0,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="65"/>
         </Grid>
-        <Grid HorizontalAlignment="Left" Height="159" Margin="650,408,0,0" VerticalAlignment="Top" Width="333">
+        <Grid HorizontalAlignment="Left" Height="159" Margin="695,408,0,0" VerticalAlignment="Top" Width="288">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
@@ -127,22 +129,22 @@
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
             <Label x:Name="angleLimitLabel1" Content="PROM" HorizontalAlignment="Left" VerticalAlignment="Top" Width="133"/>
-            <TextBox x:Name="angleLimit1TextBox" HorizontalAlignment="Left" Height="23" Margin="0,30,0,0" TextWrapping="Wrap" Text="90" VerticalAlignment="Top" Width="96"/>
+            <TextBox x:Name="PROMAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="0,30,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="96"/>
             <Label x:Name="angleLimitLabel2" Content="AROM" HorizontalAlignment="Left" Margin="0,58,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="angleLimit2TextBox" HorizontalAlignment="Left" Height="23" Margin="0,88,0,0" TextWrapping="Wrap" Text="90" VerticalAlignment="Top" Width="96"/>
+            <TextBox x:Name="AROMAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="0,88,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="96"/>
             <Label x:Name="label4" Content="總次數" HorizontalAlignment="Left" Margin="0,116,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="NumberLimitTextBox" HorizontalAlignment="Left" Height="23" Margin="0,141,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="96"/>
-            <Button x:Name="doctorSettingEnterbutton" Content="輸入" HorizontalAlignment="Left" Margin="0,364,0,0" VerticalAlignment="Top" Width="123" Click="doctorSettingEnterbutton_Click"/>
+            <TextBox x:Name="NumberLimitTextBox" HorizontalAlignment="Left" Height="23" Margin="0,141,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="96"/>
+            <Button x:Name="doctorSettingEnterbutton" Content="輸入" HorizontalAlignment="Left" Margin="0,231,0,0" VerticalAlignment="Top" Width="96" Click="doctorSettingEnterbutton_Click"/>
             <Label x:Name="angleLimitLabel1_Copy1" Content="度" HorizontalAlignment="Left" Margin="96,88,0,0" VerticalAlignment="Top" Width="27"/>
             <Label x:Name="angleLimitLabel1_Copy2" Content="度" HorizontalAlignment="Left" Margin="96,30,0,0" VerticalAlignment="Top" Width="27"/>
             <Label x:Name="angleLimitLabel1_Copy3" Content="次" HorizontalAlignment="Left" Margin="96,141,0,0" VerticalAlignment="Top" Width="27"/>
             <Label x:Name="label4_Copy" Content="持續時間" HorizontalAlignment="Left" Margin="0,169,0,0" VerticalAlignment="Top"/>
-            <TextBox x:Name="NumberLimitTextBox_Copy" HorizontalAlignment="Left" Height="23" Margin="0,199,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="96"/>
+            <TextBox x:Name="durationTextBox" HorizontalAlignment="Left" Height="23" Margin="0,199,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="96"/>
             <Label x:Name="angleLimitLabel1_Copy4" Content="秒" HorizontalAlignment="Left" Margin="96,199,0,0" VerticalAlignment="Top" Width="27"/>
-            <Label x:Name="warninglabel" Content="" HorizontalAlignment="Left" Margin="0,245,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="36"/>
-            <Label x:Name="promwarninglabel" Content="" HorizontalAlignment="Left" Margin="0,300,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="36"/>
+            <Label x:Name="warninglabel" Content="" HorizontalAlignment="Left" Margin="0,255,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="16"/>
+            <Label x:Name="promwarninglabel" Content="" HorizontalAlignment="Left" Margin="0,315,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="16"/>
         </Grid>
-        <Grid HorizontalAlignment="Left" Height="72" Margin="320,408,0,0" VerticalAlignment="Top" Width="315">
+        <Grid HorizontalAlignment="Left" Height="72" Margin="235,408,0,0" VerticalAlignment="Top" Width="455">
             <Grid.Background>
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
@@ -151,7 +153,14 @@
             <Button x:Name="shoulderAbductionButton2" Content="Shoulder Abduction" HorizontalAlignment="Left" Margin="138,1,0,0" VerticalAlignment="Top" Width="133" Click="shoulderAbductionButton2_Click"/>
             <Button x:Name="hipKneeFlexionButton" Content="Hip / Knee Flexion" HorizontalAlignment="Left" Margin="138,25,0,0" VerticalAlignment="Top" Width="133" Click="hipKneeFlexionButton_Click"/>
             <Button x:Name="aromSettingButton" Content="設定復建師指定位置" HorizontalAlignment="Left" Margin="0,49,0,0" VerticalAlignment="Top" Width="133" Click="aromSettingButton_Click"/>
+            <Label x:Name="label2" Content="目前角度" HorizontalAlignment="Left" Margin="276,3,0,0" VerticalAlignment="Top" Width="84"/>
+            <Label x:Name="label3" Content="成功次數" HorizontalAlignment="Left" Margin="276,22,0,0" VerticalAlignment="Top" Width="54"/>
+            <TextBox x:Name="sucessCountTextBox" HorizontalAlignment="Left" Height="23" Margin="335,25,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="65"/>
+            <Label x:Name="label3_Copy" Content="目前秒數" HorizontalAlignment="Left" Margin="276,43,0,0" VerticalAlignment="Top" Width="54"/>
+            <TextBox x:Name="sucessTimeCountTextBox" HorizontalAlignment="Left" Height="23" Margin="335,48,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="65"/>
+            <Button x:Name="startPointSettingButton" Content="設定起始位置" HorizontalAlignment="Left" Margin="138,49,0,0" VerticalAlignment="Top" Width="133" Click="startPointSettingButton_Click" />
         </Grid>
+        <TextBox x:Name="nowAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="570,410,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="65"/>
 
 
 
