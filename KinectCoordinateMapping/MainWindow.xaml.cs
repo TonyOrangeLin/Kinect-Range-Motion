@@ -230,7 +230,12 @@ namespace KinectCoordinateMapping
             if (settingParameter.isNearAppointPoint)
             {
                 settingParameter.nearAppointPointCount++;
-                settingParameter.timeInApointRange++;
+                if (settingParameter.nearAppointPointCount > settingParameter.timeInApointRange)
+                {
+                    settingParameter.successCount++;
+                }
+
+
             }
             else
             {
@@ -1540,6 +1545,7 @@ namespace KinectCoordinateMapping
                 TargetList[cntemp].Setting(x, y, default2UU, default2VV);
                 TargetList[cntemp].SearchRangeTrack = 30;
                 TargetList[cntemp].SearchRangeNotTrack = 100;
+                TargetList[cntemp].Cal(colorPixels, ColorInSkeleton, boolPixels);
                 //TargetList[cntemp].SearchRangeTrack = 30;
                 //TargetList[cntemp].SearchRangeNotTrack = 60;
                 if (motionMode == MotionMode.ToeRaise)
@@ -1558,6 +1564,7 @@ namespace KinectCoordinateMapping
                 TargetList[cntemp].Setting(x, y, default2UU, default2VV);
                 TargetList[cntemp].SearchRangeTrack = 20;
                 TargetList[cntemp].SearchRangeNotTrack = 40;
+                TargetList[cntemp].Cal(colorPixels, ColorInSkeleton, boolPixels);
                 if (motionMode == MotionMode.ToeRaise)
                 {
                     TargetList[cntemp].SearchRangeTrack = 20;
@@ -1574,10 +1581,25 @@ namespace KinectCoordinateMapping
                 TargetList[cntemp].Setting(x, y, default2UU, default2VV);
                 TargetList[cntemp].SearchRangeTrack = 20;
                 TargetList[cntemp].SearchRangeNotTrack = 40;
+                TargetList[cntemp].Cal(colorPixels, ColorInSkeleton, boolPixels);
                 if (motionMode == MotionMode.HipFlexion)
                 {
                     TargetList[cntemp].SearchRangeTrack = 80;
                     TargetList[cntemp].SearchRangeNotTrack = 60;
+                }
+
+                if (TargetList[0].IsTracked() || TargetList[1].IsTracked() || TargetList[2].IsTracked())
+                {
+                    double result = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
+                    if (double.IsNaN(result) || double.IsInfinity(result))
+                    {
+
+                    }
+                    else
+                    {
+                        settingParameter.startAngle = result;
+                        promwarninglabel.Content = "起始位置角度為" + result.ToString("f3") + "度";
+                    }
                 }
             }
             if (cntemp == 3)
@@ -2397,8 +2419,8 @@ namespace KinectCoordinateMapping
 
         private void doctorSettingEnterbutton_Click(object sender, RoutedEventArgs e)
         {
-            MakeExcel makeExcel = new MakeExcel();
-            makeExcel.StartExcel();
+            //MakeExcel makeExcel = new MakeExcel();
+            //makeExcel.StartExcel();
             //try
             //{
             //    angleLimit1 = Int32.Parse(angleLimit1TextBox.Text);
@@ -2521,6 +2543,7 @@ namespace KinectCoordinateMapping
                         if (settingParameter.isNearAppointPoint)
                         {
                             //算一次
+                            settingParameter.successCount++;
                         }
                         warninglabel.Content = "請繼續執行";
                         settingParameter.isNearAppointPoint = false;

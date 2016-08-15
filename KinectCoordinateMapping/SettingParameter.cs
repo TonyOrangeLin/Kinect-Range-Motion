@@ -11,8 +11,8 @@ namespace KinectCoordinateMapping
     class SettingParameter
     {
         public enum AROMmode { None, KneeExtensionFlexion, ShoulderFlexion, ShoulderAbduction, HipKneeFlexion }
-        public CameraSpacePoint startPoint { get; set; }
-        public CameraSpacePoint nowPoint { get; set; }
+        public double startAngle { get; set; }
+        public double nowAngle { get; set; }
 
         public double appointAngle { get; set; }
 
