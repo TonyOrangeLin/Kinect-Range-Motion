@@ -30,5 +30,7 @@ namespace KinectCoordinateMapping
         public bool isNearAppointPoint { get; set; } 
 
         public int nearAppointPointCount { get; set; }
+
+        public double toleranceRange { get; set; }
     }
 }

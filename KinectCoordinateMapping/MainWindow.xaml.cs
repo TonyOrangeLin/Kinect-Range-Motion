@@ -1956,8 +1956,8 @@ namespace KinectCoordinateMapping
         private void doctorSettingEnterbutton_Click(object sender, RoutedEventArgs e)
         {
             
-            MakeExcel makeExcel = new MakeExcel();
-            makeExcel.StartExcel();
+            //MakeExcel makeExcel = new MakeExcel();
+            //makeExcel.StartExcel();
             try
             {
                 settingParameter.PROMAngle = Int32.Parse(PROMAngleTextBox.Text);
@@ -1993,6 +1993,14 @@ namespace KinectCoordinateMapping
             try
             {
                 settingParameter.startAngle = double.Parse(startAngleTextBox.Text);
+            }
+            catch
+            {
+
+            }
+            try
+            {
+                settingParameter.toleranceRange = double.Parse(toleranceTextBox.Text);
             }
             catch
             {
@@ -2114,14 +2122,14 @@ namespace KinectCoordinateMapping
         {
             if (aromMode != AROMmode.None)
             {
-                if (TargetList[0].IsTracked() || TargetList[1].IsTracked() || TargetList[2].IsTracked())
+                if (TargetList[0].IsTracked() && TargetList[1].IsTracked() && TargetList[2].IsTracked())
                 {
                     bool isOverLimit = false;
                     double resultAngle = AngleCal.AngleBetween(TargetList[0], TargetList[1], TargetList[2]);
                     settingParameter.nowAngle = resultAngle;
                     nowAngleTextBox.Text = settingParameter.nowAngle.ToString("f3");
                     sucessCountTextBox.Text = settingParameter.successCount.ToString();
-                    if (resultAngle < settingParameter.AROMAngle - 10)
+                    if (resultAngle < settingParameter.AROMAngle - settingParameter.toleranceRange)
                     {
                         //if (settingParameter.isNearAppointPoint)
                         //{
@@ -2132,7 +2140,7 @@ namespace KinectCoordinateMapping
                         settingParameter.isNearAppointPoint = false;
                         
                     }
-                    else if (resultAngle > settingParameter.AROMAngle - 10 && resultAngle < settingParameter.AROMAngle)
+                    else if (resultAngle > settingParameter.AROMAngle - settingParameter.toleranceRange && resultAngle < settingParameter.AROMAngle)
                     {
                         warninglabel.Content = "OK";
                         settingParameter.isNearAppointPoint = true;
@@ -2154,7 +2162,7 @@ namespace KinectCoordinateMapping
                         promwarninglabel.Content = "";
                     }
 
-                    if (resultAngle < settingParameter.startAngle + 10 && resultAngle > settingParameter.startAngle - 10)
+                    if (resultAngle < settingParameter.startAngle + settingParameter.toleranceRange && resultAngle > settingParameter.startAngle - settingParameter.toleranceRange)
                     {
                         warninglabel.Content = "正在起始位置";
                         canSucessBeCount = true;
@@ -2168,9 +2176,12 @@ namespace KinectCoordinateMapping
                     }
                     else
                     {
+                        WriteCSV(settingParameter);
                         tempSetting.nowAngle = resultAngle;
                         settingParameterList.Add(tempSetting);
                     }
+
+
                 }
             }
 
@@ -2179,6 +2190,32 @@ namespace KinectCoordinateMapping
 
         bool canSucessBeCount = false;
         List<SettingParameter> settingParameterList = new List<SettingParameter>();
+
+        private void WriteCSV(SettingParameter sp)
+        {
+            CsvExport export = new CsvExport();
+            export.AddRow();
+
+            if (double.IsNaN(sp.nowAngle))
+            {
+
+            }
+            else
+            {
+                export["ApointAngle"] = sp.appointAngle.ToString("f3");
+                export["AROMAngle"] = sp.AROMAngle.ToString("f3");
+                export["timeInApointRange"] = sp.timeInApointRange.ToString();
+                export["now angle"] = sp.nowAngle.ToString("f3");
+                export["start angle"] = sp.startAngle.ToString("f3");
+                export["nearAppointPointCount"] = sp.nearAppointPointCount.ToString();
+                export["PROMAngle"] = sp.PROMAngle.ToString();
+                export["mode"] = aromMode;
+            }
+
+            string myCsv = export.Export();
+            export.AppendToFile("Test.csv");
+            byte[] myCsvData = export.ExportToBytes();
+        }
         private void DrawRangeMotion()
         {
             #region 腿部
