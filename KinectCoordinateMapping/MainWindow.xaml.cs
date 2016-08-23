@@ -220,7 +220,7 @@ namespace KinectCoordinateMapping
         bool takePatienBodyDataFlag = false;
         MotionMode motionMode = MotionMode.None;
         private int[] boolPixels;
-
+        EndUserAngleDisplay endUserAngleDisplay;
         int NumbersOfTarget = 10;
         public MainWindow()
         {
@@ -303,6 +303,8 @@ namespace KinectCoordinateMapping
             progressSeq = new ProgressSeq();
             frameStorageFusion = new FrameStorageFusion();
 
+            endUserAngleDisplay = new EndUserAngleDisplay();
+            endUserAngleDisplay.Show();
             for (int d = 0; d <= 93; d++)   //指標特徵運算A1~A66
             {
                 //List<double> array = new List<double>() { };
@@ -1084,16 +1086,16 @@ namespace KinectCoordinateMapping
                 TargetList[cntemp].Cal(colorPixels, ColorInSkeleton, boolPixels);
                 //TargetList[cntemp].SearchRangeTrack = 30;
                 //TargetList[cntemp].SearchRangeNotTrack = 60;
-                if (motionMode == MotionMode.ToeRaise)
-                {
-                    TargetList[cntemp].SearchRangeTrack = 30;
-                    TargetList[cntemp].SearchRangeNotTrack = 60;
-                }
-                if (motionMode == MotionMode.HeelRaise)
-                {
-                    TargetList[cntemp].SearchRangeTrack = 20;
-                    TargetList[cntemp].SearchRangeNotTrack = 40;
-                }
+                //if (motionMode == MotionMode.ToeRaise)
+                //{
+                //    TargetList[cntemp].SearchRangeTrack = 30;
+                //    TargetList[cntemp].SearchRangeNotTrack = 60;
+                //}
+                //if (motionMode == MotionMode.HeelRaise)
+                //{
+                //    TargetList[cntemp].SearchRangeTrack = 20;
+                //    TargetList[cntemp].SearchRangeNotTrack = 40;
+                //}
             }
             if (cntemp == 1)
             {
@@ -1101,16 +1103,16 @@ namespace KinectCoordinateMapping
                 TargetList[cntemp].SearchRangeTrack = 20;
                 TargetList[cntemp].SearchRangeNotTrack = 40;
                 TargetList[cntemp].Cal(colorPixels, ColorInSkeleton, boolPixels);
-                if (motionMode == MotionMode.ToeRaise)
-                {
-                    TargetList[cntemp].SearchRangeTrack = 20;
-                    TargetList[cntemp].SearchRangeNotTrack = 40;
-                }
-                if (motionMode == MotionMode.HeelRaise)
-                {
-                    TargetList[cntemp].SearchRangeTrack = 30;
-                    TargetList[cntemp].SearchRangeNotTrack = 60;
-                }
+                //if (motionMode == MotionMode.ToeRaise)
+                //{
+                //    TargetList[cntemp].SearchRangeTrack = 20;
+                //    TargetList[cntemp].SearchRangeNotTrack = 40;
+                //}
+                //if (motionMode == MotionMode.HeelRaise)
+                //{
+                //    TargetList[cntemp].SearchRangeTrack = 30;
+                //    TargetList[cntemp].SearchRangeNotTrack = 60;
+                //}
             }
             if (cntemp == 2)
             {
@@ -1118,11 +1120,11 @@ namespace KinectCoordinateMapping
                 TargetList[cntemp].SearchRangeTrack = 20;
                 TargetList[cntemp].SearchRangeNotTrack = 40;
                 TargetList[cntemp].Cal(colorPixels, ColorInSkeleton, boolPixels);
-                if (motionMode == MotionMode.HipFlexion)
-                {
-                    TargetList[cntemp].SearchRangeTrack = 80;
-                    TargetList[cntemp].SearchRangeNotTrack = 60;
-                }
+                //if (motionMode == MotionMode.HipFlexion)
+                //{
+                //    TargetList[cntemp].SearchRangeTrack = 80;
+                //    TargetList[cntemp].SearchRangeNotTrack = 60;
+                //}
 
                 if (TargetList[0].IsTracked() || TargetList[1].IsTracked() || TargetList[2].IsTracked())
                 {
@@ -2179,6 +2181,7 @@ namespace KinectCoordinateMapping
                         WriteCSV(settingParameter);
                         tempSetting.nowAngle = resultAngle;
                         settingParameterList.Add(tempSetting);
+                        endUserAngleDisplay.UpdateData(resultAngle);
                     }
 
 
@@ -2434,24 +2437,31 @@ namespace KinectCoordinateMapping
         private void resetMarkbutton_Click(object sender, RoutedEventArgs e)
         {
             TargetList = new List<Target>();
+
             for (int t = 0; t <= NumbersOfTarget; t++)
             {
                 Target target2 = new Target(t);
                 TargetList.Add(target2);
             }
             cntemp = 0;
+
+
         }
 
         private void kneeFlexionExtensionButton_Click(object sender, RoutedEventArgs e)
         {
             aromMode = AROMmode.KneeExtensionFlexion;
             cntemplimit = 3;
+            PROMAngleTextBox.Text = "180";
+            settingParameter.PROMAngle = 180;
         }
 
         private void shoulderFlexionButton2_Click(object sender, RoutedEventArgs e)
         {
             aromMode = AROMmode.ShoulderFlexion;
             cntemplimit = 3;
+            PROMAngleTextBox.Text = "180";
+            settingParameter.PROMAngle = 180;
         }
 
        
@@ -2459,12 +2469,16 @@ namespace KinectCoordinateMapping
         {
             aromMode = AROMmode.ShoulderAbduction;
             cntemplimit = 3;
+            PROMAngleTextBox.Text = "180";
+            settingParameter.PROMAngle = 180;
         }
 
         private void hipKneeFlexionButton_Click(object sender, RoutedEventArgs e)
         {
             aromMode = AROMmode.HipKneeFlexion;
             cntemplimit = 3;
+            PROMAngleTextBox.Text = "180";
+            settingParameter.PROMAngle = 180;
         }
 
         private void aromSettingButton_Click(object sender, RoutedEventArgs e)

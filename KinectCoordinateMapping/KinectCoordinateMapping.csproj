@@ -95,6 +95,9 @@
     <Compile Include="ButtonCommand\ZoomOutCommand.cs" />
     <Compile Include="CoordinateTransform.cs" />
     <Compile Include="CsvExport.cs" />
+    <Compile Include="EndUserAngleDisplay.xaml.cs">
+      <DependentUpon>EndUserAngleDisplay.xaml</DependentUpon>
+    </Compile>
     <Compile Include="FileSave.cs" />
     <Compile Include="FrameStore\FrameStorage.cs" />
     <Compile Include="FrameStore\FrameStorageFusion.cs" />
@@ -133,6 +136,10 @@
     <Compile Include="Utilities\DepthExtensions.cs" />
     <Compile Include="Utilities\InfraredExtensions.cs" />
     <Compile Include="Parameter\ZoomStruct.cs" />
+    <Page Include="EndUserAngleDisplay.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="HumanBody.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

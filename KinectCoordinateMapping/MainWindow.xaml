@@ -129,7 +129,7 @@
                 <SolidColorBrush Color="Black" Opacity="0.3"/>
             </Grid.Background>
             <Label x:Name="angleLimitLabel1" Content="PROM" HorizontalAlignment="Left" VerticalAlignment="Top" Width="133"/>
-            <TextBox x:Name="PROMAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="0,30,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="96"/>
+            <TextBox x:Name="PROMAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="0,30,0,0" TextWrapping="Wrap" Text="150" VerticalAlignment="Top" Width="96"/>
             <Label x:Name="angleLimitLabel2" Content="AROM" HorizontalAlignment="Left" Margin="0,58,0,0" VerticalAlignment="Top"/>
             <TextBox x:Name="AROMAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="0,88,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="96"/>
             <Label x:Name="label4" Content="總次數" HorizontalAlignment="Left" Margin="0,116,0,0" VerticalAlignment="Top"/>
@@ -143,7 +143,7 @@
             <Label x:Name="angleLimitLabel1_Copy4" Content="秒" HorizontalAlignment="Left" Margin="96,199,0,0" VerticalAlignment="Top" Width="27"/>
             <Label x:Name="warninglabel" Content="" HorizontalAlignment="Left" Margin="0,362,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="16"/>
             <Label x:Name="promwarninglabel" Content="" HorizontalAlignment="Left" Margin="0,422,0,0" VerticalAlignment="Top" Height="55" Width="123" FontSize="16"/>
-            <TextBox x:Name="toleranceTextBox" HorizontalAlignment="Left" Height="23" Margin="0,250,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="96"/>
+            <TextBox x:Name="toleranceTextBox" HorizontalAlignment="Left" Height="23" Margin="0,250,0,0" TextWrapping="Wrap" Text="10" VerticalAlignment="Top" Width="96"/>
             <Label x:Name="label4_Copy1" Content="容忍角度" HorizontalAlignment="Left" Margin="0,227,0,0" VerticalAlignment="Top"/>
             <Label x:Name="angleLimitLabel1_Copy" Content="度" HorizontalAlignment="Left" Margin="96,248,0,0" VerticalAlignment="Top" Width="27"/>
             <TextBox x:Name="startAngleTextBox" HorizontalAlignment="Left" Height="23" Margin="0,308,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="96"/>
